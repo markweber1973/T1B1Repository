@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" xmlns:app="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/nrOfBouldersTag"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/select_boulder_id"
+        android:textSize="40sp"
+      
+        android:typeface="monospace" />
+   
+    <RadioGroup
+        android:id="@+id/bouldersRadioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <RadioButton
+            android:id="@+id/oneBoulder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:textSize="50sp"
+            android:text="@string/one" />
+
+        <RadioButton
+            android:id="@+id/twoBoulders"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:textSize="50sp"
+            android:text="@string/two" />
+        
+        <RadioButton
+            android:id="@+id/threeBoulders"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:textSize="50sp"
+            android:text="@string/three" />
+
+        <RadioButton
+            android:id="@+id/fourBoulders"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:textSize="50sp"
+            android:text="@string/four" />
+        
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:context=".EnterMatchDataActivity" >
+
+        <Button
+            android:id="@+id/okButton"
+            style="@android:style/TextAppearance.Large"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/OK"
+            android:textSize="40sp"
+           />
+
+        <Button
+            android:id="@+id/cancelButton"
+            style="@android:style/TextAppearance.Large"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancel"
+            android:textSize="40sp"
+            />
+    </LinearLayout>
+    
+</LinearLayout>
