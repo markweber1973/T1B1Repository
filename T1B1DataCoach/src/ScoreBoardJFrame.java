@@ -37,10 +37,12 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 	EventInfo eventInfo;
 	String roundInfo = "";
 	
+	int toggleTimer;
+	
 	public ScoreBoardJFrame()
 	{
 
-	
+		toggleTimer = 0;
 			try {
 				dao = new MySQLAccess();
 			} catch (Exception e) {
@@ -52,7 +54,7 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Boulder Score Board"); 
 		//scoreBoard(true);
-		//this.fullscreen();
+		this.fullscreen();
 		this.setLayout(null);
 		Color backGround = new Color(0);
 		this.setBackground(backGround);
@@ -97,7 +99,7 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 			e.printStackTrace();
 		}
 		
-		try {
+	/*	try {
 			dao.fillClimberList(allClimbers);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -110,7 +112,7 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 			// TODO Auto-generated catch block
 			
 			e.printStackTrace();
-		}
+		}*/
 		
 		rowCalculator = new UIRowCalculator(this.getHeight(), this.getWidth(), allClimbers.size());
 		rowCalculator.setInternationMode(eventInfo.getInternational());
@@ -129,35 +131,81 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 	
 	public void update()
 	{		
+		toggleTimer++;
+
+		int toggleRound = 0;
+		int activeRound = 0;
+		int showRound = 0;
+		try {
+			activeRound = dao.getActiveRoundId();
+			toggleRound = dao.getToggleRoundId();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		if (toggleTimer < 10)
+		{
+			showRound = activeRound;
+		}
+		else if (toggleTimer < 20)
+		{
+			if (activeRound == toggleRound)
+			{
+				showRound = activeRound;
+			}
+			else
+			{
+				showRound = toggleRound;
+			}
+		}
+		else
+		{
+			toggleTimer = 0;
+			showRound = activeRound;
+		}
+				
 		allClimbers.clear();
 		allBoulderScores.clear();
 		allScoresCards.clear();
 		allRankedScoreCards.clear();
-			
+
+	
+		
 		try {
 			eventInfo = dao.fillEventInfo();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			
+		} catch (Exception e) {			
 			e.printStackTrace();
 		}
+					
 		rowCalculator.setInternationMode(eventInfo.getInternational());
 		
 		try {
-			dao.fillClimberList(allClimbers);
+			dao.fillClimberList(allClimbers, showRound);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			
 			e.printStackTrace();
 		}
 		try {
-			dao.fillBoulderScoreList(allBoulderScores);
+			dao.fillBoulderScoreList(allBoulderScores, showRound);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			
 			e.printStackTrace();
 		}
-		
+	
+		try {
+			roundInfo = dao.fillRoundInfo(showRound);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		int lineZero = 0;
+		JLabel labelEvent = new JLabel();  
+	    Color textColor = new Color(255,255,255);
+	    labelEvent.setText(eventInfo.getName() + ", " + roundInfo);
+	    labelEvent.setForeground(textColor);
+
+	    Font curFont = labelEvent.getFont();
+	    labelEvent.setFont(new Font(curFont.getFontName(), curFont.getStyle(), rowCalculator.getBigFontSize())); 
+	    labelEvent.setBounds(rowCalculator.getPosition(lineZero), rowCalculator.getPosition(lineZero), this.getWidth(), rowCalculator.getRowHeigth());   	
+	    addDynamicLabel(labelEvent);			
 		
 		for (Iterator<Climber> iClimber = allClimbers.iterator(); iClimber.hasNext();) 
 		{
@@ -314,15 +362,15 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
     	    addStaticLabel(labelBoulderNumber);
 		}
 		
-		JLabel labelEvent = new JLabel();  
-	    Color textColor = new Color(255,255,255);
-	    labelEvent.setText(eventInfo.getName() + ", " + roundInfo);
-	    labelEvent.setForeground(textColor);
+//		JLabel labelEvent = new JLabel();  
+//	    Color textColor = new Color(255,255,255);
+//	    labelEvent.setText(eventInfo.getName() + ", " + roundInfo);
+//	    labelEvent.setForeground(textColor);
 
-	    Font curFont = labelEvent.getFont();
-	    labelEvent.setFont(new Font(curFont.getFontName(), curFont.getStyle(), rowCalculator.getBigFontSize())); 
-	    labelEvent.setBounds(rowCalculator.getPosition(lineZero), rowCalculator.getPosition(lineZero), this.getWidth(), rowCalculator.getRowHeigth());   	
-	    addStaticLabel(labelEvent);
+//	    Font curFont = labelEvent.getFont();
+//	    labelEvent.setFont(new Font(curFont.getFontName(), curFont.getStyle(), rowCalculator.getBigFontSize())); 
+//	    labelEvent.setBounds(rowCalculator.getPosition(lineZero), rowCalculator.getPosition(lineZero), this.getWidth(), rowCalculator.getRowHeigth());   	
+//	    addStaticLabel(labelEvent);
 	}
 	
 	private void showStaticLabels()

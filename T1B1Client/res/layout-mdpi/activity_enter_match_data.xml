@@ -20,7 +20,7 @@
 	            android:layout_gravity="center_horizontal"
 	            android:gravity="center"
 	            android:text="@string/currentboulder"
-	            android:textSize="22sp" />
+	            android:textSize="15sp" />
 	      
 	        <TextView
 	            android:id="@+id/currentBoulderTextView"
@@ -30,7 +30,7 @@
 	            android:layout_gravity="center_horizontal"
 	            android:gravity="center"
 	            android:text="@string/non_init"
-	            android:textSize="30sp"
+	            android:textSize="20sp"
 	            android:textStyle="bold" />
         
 	        <TextView
@@ -41,7 +41,7 @@
 	            android:layout_gravity="center_horizontal"
 	            android:gravity="center"
 	            android:text="@string/currentclimber"
-	            android:textSize="22sp" />
+	            android:textSize="15sp" />
 	 		      
 	        <TextView
 	            android:id="@+id/startNumberTextView"
@@ -51,7 +51,7 @@
 	            android:layout_gravity="center_horizontal"
 	            android:gravity="center"
 	            android:text="@string/non_init"
-	            android:textSize="30sp"
+	            android:textSize="20sp"
 	            android:textStyle="bold" />
 	             	                		      
 	        <TextView
@@ -62,7 +62,7 @@
 	            android:layout_gravity="center_horizontal"
 	            android:gravity="center"
 	            android:text="@string/non_init"
-	            android:textSize="30sp"
+	            android:textSize="15sp"
 	            android:textStyle="bold" />
 	                           
 	        <TextView
@@ -73,7 +73,7 @@
 	            android:layout_gravity="center_horizontal"
 	            android:gravity="center"
 	            android:text="@string/score"
-	            android:textSize="22sp" />
+	            android:textSize="15sp" />
 		      
 	        <TextView
 	            android:id="@+id/currentScoreTextView"

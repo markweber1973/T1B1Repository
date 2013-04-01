@@ -19,10 +19,10 @@ public class MySQLAccess {
 		//statement = connect.prepareStatement("select * from T1B1.climbers");
 	}
 	
-	public void fillClimberList(List<Climber> climberList) throws Exception
+	public void fillClimberList(List<Climber> climberList, int round) throws Exception
 	{
 		int eventId = getEventId();
-		int roundId = getRoundId();
+		//int roundId = getRoundId();
 		
 		Class.forName("com.mysql.jdbc.Driver");
 		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
@@ -34,7 +34,7 @@ public class MySQLAccess {
 			String query = "SELECT roundenrollment.startnumber, climbers.firstname, climbers.lastname, roundenrollment.polePosition, climbers.nationality" +
 			        " FROM roundenrollment INNER JOIN eventenrollment ON (roundenrollment.startnumber=eventenrollment.startnumber) " +
 			        " INNER JOIN climbers ON (eventenrollment.climberId=climbers.climberId) " +
-			        " WHERE (roundenrollment.eventId='" + eventId + "' AND roundenrollment.roundId='" + roundId + "') " +
+			        " WHERE (roundenrollment.eventId='" + eventId + "' AND roundenrollment.roundId='" + round + "') " +
 			        " ORDER BY roundenrollment.startnumber";			
 			
 			resultSet = statement.executeQuery(query);	
@@ -66,14 +66,14 @@ public class MySQLAccess {
 
 	
 	
-	public void fillBoulderScoreList(List<BoulderScore> boulderScoreList) throws Exception
+	public void fillBoulderScoreList(List<BoulderScore> boulderScoreList, int round) throws Exception
 	{
 		Class.forName("com.mysql.jdbc.Driver");
 		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
 		try {
 
 			statement = connect.createStatement();
-			resultSet = statement.executeQuery("select * from T1B1.scores");	
+			resultSet = statement.executeQuery("select * from T1B1.scores WHERE roundId = " + round);	
 			while (resultSet.next()) {
 				
 				int startNumber = resultSet.getInt("startNumber");
@@ -99,7 +99,7 @@ public class MySQLAccess {
 		}
 	}
 
-	public int getRoundId() throws Exception
+	public int getActiveRoundId() throws Exception
 	{
 		Class.forName("com.mysql.jdbc.Driver");
 		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
@@ -120,6 +120,29 @@ public class MySQLAccess {
 			close();
 		}
 		return roundId;			
+	}	
+	
+	public int getToggleRoundId() throws Exception
+	{
+		Class.forName("com.mysql.jdbc.Driver");
+		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		int boardMode;
+		
+		try {
+
+			statement = connect.createStatement();
+			resultSet = statement.executeQuery("select * from T1B1.boardmode");	
+			resultSet.next();
+			boardMode = resultSet.getInt("boardMode");
+			
+			resultSet.close();
+			statement.close();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			close();
+		}
+		return boardMode;			
 	}	
 	
 	public int getEventId() throws Exception
@@ -143,6 +166,39 @@ public class MySQLAccess {
 			close();
 		}
 		return eventId;			
+	}
+	
+	public void setActiveRound(int activeRound) throws Exception
+	{
+		Class.forName("com.mysql.jdbc.Driver");
+		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		
+		try {
+
+			int result = 0;
+
+		    statement = connect.createStatement();
+		    result = statement.executeUpdate("DELETE FROM activeround");	
+			resultSet.close();
+			statement.close();
+			
+		    statement = connect.createStatement();
+		    result = statement.executeUpdate("INSERT INTO activeround (roundId) VALUES ('" + activeRound + "');");	
+			resultSet.close();
+			statement.close();			
+			//statement = connect.createStatement();
+			//result = statement.executeUpdate("UPDATE  `T1B1`.`activeround` SET  `roundId` =  '4' WHERE  `activeround`.`roundId` =3 LIMIT 1");	
+		
+			resultSet.close();
+			statement.close();
+			
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			close();
+		}		
+		
 	}
 	
 	public EventInfo fillEventInfo() throws Exception
@@ -223,6 +279,30 @@ public class MySQLAccess {
 		}
 		return roundInfo;
 	}
+	
+	public String fillRoundInfo(int roundId) throws Exception
+	{
+		String roundInfo;
+		
+		Class.forName("com.mysql.jdbc.Driver");
+		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		try {
+			
+			statement = connect.createStatement();
+			resultSet = statement.executeQuery("select * from T1B1.rounds WHERE roundId = " + roundId);
+			resultSet.next();
+			roundInfo = resultSet.getString("name");
+			
+			resultSet.close();
+			statement.close();
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			close();
+		}
+		return roundInfo;
+	}	
 	// You need to close the resultSet
 	private void close() {
 	    try {

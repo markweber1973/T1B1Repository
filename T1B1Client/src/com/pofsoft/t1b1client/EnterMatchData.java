@@ -1,6 +1,7 @@
 package com.pofsoft.t1b1client;
 
 import android.os.Bundle;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -39,15 +40,15 @@ public class EnterMatchData extends Activity {
 	private BlockingQueue<ScoreProducerQueueEntry> producerQueue = null;
 	private ScoreConsumer scoreConsumer;
 	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//View v = findViewById(R.layout.activity_enter_match_data);
 		//v.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE); 
-	
 		setContentView(R.layout.activity_enter_match_data);	
-
+		getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		producerQueue = new ArrayBlockingQueue<ScoreProducerQueueEntry>(1000);
 		scoreConsumer = new ScoreConsumer(producerQueue);
 		new Thread(scoreConsumer).start();
@@ -64,11 +65,11 @@ public class EnterMatchData extends Activity {
 		currentClimber = globalMatchData.getFirst();
 		
 		nextClimberButton = (Button) findViewById(R.id.nextClimberButton); 
-		
 		nextClimberButton.setOnClickListener(new View.OnClickListener()
         {
         	public void onClick(View v) 
         	{ 
+        	
         		if (globalMatchData.hasNext())
         		{
         			currentClimber = globalMatchData.getNext();
@@ -106,6 +107,7 @@ public class EnterMatchData extends Activity {
         {
         	public void onClick(View v) 
         	{ 
+
         		currentClimber.reachedBonus();
         		updateUI();
         		updateScoreDataOnServer();
@@ -117,6 +119,7 @@ public class EnterMatchData extends Activity {
         {
         	public void onClick(View v) 
         	{ 
+
         		currentClimber.reachedTop();
         		updateUI();
         		updateScoreDataOnServer();    	
@@ -128,6 +131,7 @@ public class EnterMatchData extends Activity {
         {
         	public void onClick(View v) 
         	{ 
+
         		currentClimber.undo();      		
         		updateUI();
         		updateScoreDataOnServer();
@@ -139,6 +143,7 @@ public class EnterMatchData extends Activity {
         {
         	public void onClick(View v) 
         	{ 
+
         		currentClimber.finished();
         		updateUI();
         		updateScoreDataOnServer();
@@ -176,7 +181,7 @@ public class EnterMatchData extends Activity {
 		
 		nextClimberButton.setEnabled(globalMatchData.hasNext() && currentClimber.isFinished());
 		previousClimberButton.setEnabled(globalMatchData.hasPrevious());
-		finishedButton.setEnabled(!currentClimber.isFinished() && !currentClimber.topReached());
+		finishedButton.setEnabled(!currentClimber.isFinished());
 		topButton.setEnabled(!currentClimber.topReached() && !currentClimber.isFinished());
 		bonusButton.setEnabled(!currentClimber.bonusReached() && !currentClimber.isFinished());
 		attemptButton.setEnabled(!currentClimber.isFinished() && !currentClimber.topReached());
@@ -202,6 +207,7 @@ public class EnterMatchData extends Activity {
         {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+            	getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 finish();    
             }
 

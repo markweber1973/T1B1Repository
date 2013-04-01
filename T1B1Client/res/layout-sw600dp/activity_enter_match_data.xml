@@ -118,7 +118,8 @@
     
 		<Button
 		    android:id="@+id/bonusButton"
-		    style="@android:style/TextAppearance.Large"
+		    style="@style/ButtonStyle"
+		    android:background="@drawable/custom_button"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="1"		    
@@ -128,7 +129,8 @@
 
 		<Button
 		    android:id="@+id/topButton"
-		    style="@android:style/TextAppearance.Large"
+		    style="@style/ButtonStyle"
+		    android:background="@drawable/custom_button"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="1"
@@ -146,7 +148,8 @@
 	    
  		<Button
  		    android:id="@+id/attemptButton"
- 		    style="@android:style/TextAppearance.Large"
+ 		    style="@style/ButtonStyle"
+ 		    android:background="@drawable/custom_button"
  		    android:layout_width="fill_parent"
  		    android:layout_height="wrap_content"
  		    android:text="@string/attempt"
@@ -155,7 +158,8 @@
  		
   		<Button
 		    android:id="@+id/finishedButton"
-		    style="@android:style/TextAppearance.Large"
+		    style="@style/ButtonStyle"
+		    android:background="@drawable/custom_button"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 		    android:textStyle="bold"	
@@ -164,7 +168,8 @@
 		    	
  		<Button
 		    android:id="@+id/undoButton"
-		    style="@android:style/TextAppearance.Large"
+		    style="@style/ButtonStyle"
+		    android:background="@drawable/custom_button"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"		    
 		    android:textStyle="bold"	
@@ -181,22 +186,24 @@
 	      
 		<Button
 		    android:id="@+id/previousClimberButton"
-		    style="@android:style/TextAppearance.Large"
+		    style="@style/ButtonStyle"
+		    android:background="@drawable/custom_button"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
+		    android:layout_weight="1"	  
 		    android:textStyle="bold"
 		    android:textSize="50sp"		  	
 		    android:text="@string/previous" />
 		
 		<Button
 		    android:id="@+id/nextClimberButton"
-		    style="@android:style/TextAppearance.Large"
+		    style="@style/ButtonStyle"
+		    android:background="@drawable/custom_button"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
-		    android:layout_weight="1"	  
-		    android:textStyle="bold"	
-		    android:textSize="50sp"	      
+		    android:layout_weight="1"	    
+		    android:textStyle="bold"
+		    android:textSize="50sp"	  
 		    android:text="@string/next" />		
 	</LinearLayout>
 
