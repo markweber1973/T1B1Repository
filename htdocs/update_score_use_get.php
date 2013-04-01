@@ -4,6 +4,19 @@
     ?>
 
 <?php
+function getRoundForStartnumber($startNumber, $activeevent)
+{
+	$query="SELECT * FROM roundenrollment WHERE eventId = $activeevent AND startNumber = $startNumber";
+	
+	$result = mysql_query($query) or die ("FOUT: " . mysql_error());
+	
+	$row = mysql_fetch_array($result);
+
+	return $row["roundId"];
+}
+?>
+
+<?php
 
     $response = array();
    
@@ -15,22 +28,35 @@
     $bonussed = $_POST['bonussed'];
     $bonusAttempts = $_POST['bonusAttempts'];
     $attempts = $_POST['attempts'];
-  
-    // mysql update row with matched pid
-    $query = "UPDATE scores SET finished = '$finished', topped = '$topped', topAttempts = '$topAttempts', bonussed = '$bonussed', ".
-             "bonusAttempts = '$bonusAttempts', attempts = '$attempts' WHERE ((eventId = $activeevent) AND (roundId = $activeround) ".
-             "AND (boulderNumber = $boulderNumber) AND (startNumber = $startNumber))";
     
-    echo($query);
+    //echo "bla". $boulderNumber;
+    
+    // mysql update row with matched pid
+//    $query = "UPDATE scores SET finished = '$finished', topped = '$topped', topAttempts = '$topAttempts', bonussed = '$bonussed', ".
+//             "bonusAttempts = '$bonusAttempts', attempts = '$attempts' WHERE ((eventId = $activeevent) AND (roundId = $activeround) ".
+//             "AND (boulderNumber = $boulderNumber) AND (startNumber = $startNumber))";
+
+   
+    $determinedRoundId = getRoundForStartnumber($startNumber, $activeevent);
+     
+    $query = "UPDATE scores SET finished = '$finished', topped = '$topped', topAttempts = '$topAttempts', bonussed = '$bonussed', ".
+             "bonusAttempts = '$bonusAttempts', attempts = '$attempts' WHERE ((eventId = $activeevent) AND (roundId = $determinedRoundId) ".
+             "AND (boulderNumber = $boulderNumber) AND (startNumber = $startNumber))";    
+    
     $result = mysql_query($query) or die ("error");
     if (mysql_affected_rows() == 0)
     {
         echo("Nothing updated, try to insert new one");
+//        $query = "INSERT INTO scores (eventId, roundId, boulderNumber, startNumber, finished, topped, topAttempts, bonussed, bonusAttempts, attempts) ".
+//    	                      " VALUES ('$activeevent', '$activeround', '$boulderNumber', '$startNumber', '$finished', '$topped', '$topAttempts', ".
+//    	                      "'$bonussed', '$bonusAttempts', '$attempts') ";
+
         $query = "INSERT INTO scores (eventId, roundId, boulderNumber, startNumber, finished, topped, topAttempts, bonussed, bonusAttempts, attempts) ".
-    	                      " VALUES ('$activeevent', '$activeround', '$boulderNumber', '$startNumber', '$finished', '$topped', '$topAttempts', ".
+    	                      " VALUES ('$activeevent', '$determinedRoundId', '$boulderNumber', '$startNumber', '$finished', '$topped', '$topAttempts', ".
     	                      "'$bonussed', '$bonusAttempts', '$attempts') ";
-    	                    
-        echo $query;
+        
+        
+        //echo $query;
     	$result = mysql_query($query);
     }
     // check if row inserted or not

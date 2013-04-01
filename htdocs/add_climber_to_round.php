@@ -39,7 +39,7 @@
    
 		$query="SELECT * FROM climbers WHERE climberId=" . $_GET["climberId"];
 		$result = mysql_query($query, $db) or die ("FOUT: " . mysql_error());
-   
+        echo $query;
     ?>
 <html>
 <head>
@@ -55,6 +55,7 @@
         $nationality = $rij['nationality'];
         $sex         = $rij['sex'] ;
         $climberId   = $rij['climberId'] ;
+        
        
     }?>
 <form action="<?php echo($_SERVER["PHP_SELF"]);?>" method="post">
