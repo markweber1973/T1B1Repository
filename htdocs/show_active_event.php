@@ -25,6 +25,16 @@ $activeroundresult = mysql_query($query, $db) or die ("FOUT: " . mysql_error());
 $rij = mysql_fetch_array($activeroundresult);
 $activerounddescription = $rij['name'];    
     
+$query= "SELECT * FROM activephase;"; 
+$activephaseresult = mysql_query($query, $db);  
+$rij = mysql_fetch_array($activephaseresult);  
+    
+$activephaseid = $rij['phaseId'];
+$query="SELECT * FROM phases WHERE phaseId =". $activephaseid;
+$activephaseresult = mysql_query($query, $db) or die ("FOUT: " . mysql_error());
+$rij = mysql_fetch_array($activephaseresult);
+$activephasedescription = $rij['name'];  
+
 function getActiveEventId()
 {
     global $activeeventid;
@@ -36,7 +46,12 @@ function getActiveRoundId()
     global $activeroundid;
     return $activeroundid;
 }   
-     
+
+function getActivePhaseId()
+{
+    global $activephaseid;
+    return $activephaseid;
+} 
 // ============================
 ?>
 
@@ -50,6 +65,8 @@ Active event:
 <?php echo $activeeventdescription; ?>
 <br>Active round: 
 <?php echo $activerounddescription; ?>
+<br>Active phase: 
+<?php echo $activephasedescription; ?>
 </body>
 </html>
 

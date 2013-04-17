@@ -48,6 +48,7 @@ $activerounddescription = $rij['name'];
 			      "<td><a href=\"delete_round.php?roundId=" .$rij['roundId'] . "\">Delete</a></td>" .
 			      "<td><a href=\"modify_round.php?roundId=" .$rij['roundId'] . "\">Modify</a>" .
                   "<td><a href=\"activate_round.php?roundId=" .$rij['roundId'] . "\">Activate</a>" .
+				  "<td><a href=\"add_round_to_phase.php?roundId=" .$rij['roundId'] . "\">Enroll</a>" .
 				  "<td><a href=\"activate_toggling_round.php?roundId=" .$rij['roundId'] . "\">Toggling</a>" .
 			      "</td></tr>\n");
 	}

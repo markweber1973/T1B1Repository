@@ -49,7 +49,8 @@ $result = mysql_query($query, $db);
                   "<td><a href=\"add_climber_to_event.php?climberId=" .$rij['climberId'] . "\">Add to</a>" . " / " . 
                       "<a href=\"remove_climber_from_event.php?climberId=" .$rij['climberId'] . "\">Remove from</a>".
                   "<td><a href=\"add_climber_to_round.php?climberId=" .$rij['climberId'] . "\">Add to</a>" . " / " .
-                      "<a href=\"remove_from_round_climber.php?climberId=" .$rij['climberId'] . "\">Remove from</a>".             
+                      "<a href=\"remove_from_round_climber.php?climberId=" .$rij['climberId'] . "\">Remove from</a>".  
+  		           
 			      "</td></tr>\n");
 	}
 ?>

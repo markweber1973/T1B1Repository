@@ -24,10 +24,12 @@
         <li><a href="add_event_form.php">Add event</a></li>
         <li><a href="events_overview.php">Overview / modify events</a></li>
         <li><a href="rounds_overview.php">Overview / modify rounds</a></li>
+        <li><a href="phases_overview.php">Overview / modify phases</a></li>
 	    <li><a href="add_score_form.php">Add a score</a></li>
 	    <li><a href="globals.php">Globals</a></li>
 	    <li><a href="active_round_overview.php">Active round overview</a></li>
 	    <li><a href="active_event_overview.php">Active event overview</a></li>
+	    <li><a href="active_phase_overview.php">Active phase overview</a></li>
 	    <li><a href="get_all_climbers_in_active_round_active_event.php">Overview of active round</a></li>
       </ul>
 </td>

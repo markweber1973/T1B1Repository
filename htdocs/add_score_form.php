@@ -5,7 +5,10 @@
 
 <body>
 <h2>Add score</h2>
-<form method="post" action="update_score_use_get.php">
+<form method="post" action="update_score_use_get_extended.php">
+Eventid:  <input type="Text" name="eventId"          	size="4"><br>
+PhaseId:  <input type="Text" name="phaseId"          	size="4"><br>
+RoundId:  <input type="Text" name="roundId"          	size="4"><br>
 Bouldernumber:  <input type="Text" name="boulderNumber"          	size="4"><br>
 Startnumber:    <input type="Text" name="startNumber"          		size="4"><br>
 Finished:       <input type="Text" name="finished"         		size="4"><br>
