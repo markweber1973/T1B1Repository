@@ -19,9 +19,10 @@ public class PolePositionedClimberList {
 		Collections.sort(startList, new PolePositionedClimberComparator());
 	}
 	
-	public void addPolePositionedClimber(int startNumber, int polePosition, String firstName, String lastName)
+	public void addPolePositionedClimber(int startNumber, int polePosition, int sequence, String firstName, String lastName,
+			int eventId, int phaseId, int roundId)
 	{
-		startList.add(new PolePositionedClimber(startNumber, polePosition, firstName, lastName));
+		startList.add(new PolePositionedClimber(startNumber, polePosition, sequence, firstName, lastName, eventId, phaseId, roundId));
 		Collections.sort(startList, new PolePositionedClimberComparator());
 	}
 	

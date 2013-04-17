@@ -1,5 +1,4 @@
 package com.pofsoft.t1b1client;
-
 import android.os.Bundle;
 import android.app.ListActivity;
 
@@ -12,7 +11,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,16 +34,21 @@ public class GetStartList extends ListActivity
 	static String json = "";
 	static JSONObject jObj = null;
 	boolean sex = false;
-
-	private static final String url_get_startlist = "http://BoulderServer:8888/get_all_climbers_in_active_round_active_event.php";
+	
+	private static final String url_get_startlist = "http://BoulderServer:8888/get_all_climbers_in_active_phase_active_event.php";
 	
 	// JSON Node names
 	private static final String TAG_STARTNUMBER = "startnumber";
 	private static final String TAG_POLEPOSITION = "poleposition";
 	private static final String TAG_FIRSTNAME = "firstName";
 	private static final String TAG_LASTNAME = "lastName";	
-	private static final String TAG_ROUNDDEFINITION = "roundDefinition";	
-//	private static final String TAG_SUCCESS = "success";
+	private static final String TAG_ROUNDDEFINITION = "roundDefinition";
+	
+	private static final String TAG_SEQUENCE = "sequence";
+	private static final String TAG_EVENTID = "eventId";
+	private static final String TAG_PHASEID = "phaseId";
+	private static final String TAG_ROUNDID = "roundId";
+	
 	private MatchData globalMatchData;
 
 	@Override
@@ -53,6 +56,9 @@ public class GetStartList extends ListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.start_list);
 			
+		//sqliteHelper.getAllClimbers();
+		//List<com.pofsoft.datastruct.Climber> myList = sqliteHelper.getAllClimbers();
+		
 		okButton = (Button) findViewById(R.id.ok_button);       
 		okButton.setOnClickListener(new View.OnClickListener()
         {
@@ -131,6 +137,7 @@ public class GetStartList extends ListActivity
 					/**
 					 * Updating parsed JSON data into ListView
 					 * */
+													
 					ListAdapter adapter = new SimpleAdapter(
 							GetStartList.this, startList,
 							R.layout.list_item, new String[] { TAG_STARTNUMBER,	TAG_POLEPOSITION, TAG_FIRSTNAME, TAG_LASTNAME},
@@ -190,10 +197,19 @@ public class GetStartList extends ListActivity
 					String lastName = (String) test.get(TAG_LASTNAME);
 					String firstName = (String) test.get(TAG_FIRSTNAME);
 					String poleposition = (String) test.get(TAG_POLEPOSITION);
-
+					
+					String sequence = (String) test.get(TAG_SEQUENCE);
+					String eventid = (String) test.get(TAG_EVENTID);
+					String phaseid = (String) test.get(TAG_PHASEID);
+					String roundid = (String) test.get(TAG_ROUNDID);
+												
 					globalMatchData.addPolePositionedClimber(Integer.valueOf(startnumber), Integer.valueOf(poleposition), 
-							firstName, lastName);
+							Integer.valueOf(sequence), firstName, lastName, 
+							Integer.valueOf(eventid),Integer.valueOf(phaseid),Integer.valueOf(roundid));			
 				}
+				
+				
+				
 				if (!globalMatchData.isEmpty())
 				{
 					globalMatchData.sort();					

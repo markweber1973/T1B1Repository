@@ -36,6 +36,8 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 	List<JLabel> nextDynamicLabels;
 	EventInfo eventInfo;
 	String roundInfo = "";
+	int activePhaseId = 0;
+	int activeEventId = 0;
 	
 	int toggleTimer;
 	
@@ -54,11 +56,11 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Boulder Score Board"); 
 		//scoreBoard(true);
-		this.fullscreen();
+		//this.fullscreen();
 		this.setLayout(null);
 		Color backGround = new Color(0);
 		this.setBackground(backGround);
-		this.setLocationRelativeTo(null); 
+		//this.setLocationRelativeTo(null); 
 		this.setSize(800,600);
 		
 		//Toolkit tk = Toolkit.getDefaultToolkit();  
@@ -93,11 +95,14 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 		
 		try {
 			roundInfo = dao.fillRoundInfo();
+			activeEventId = dao.getActiveEventId();
+			activePhaseId = dao.getActivePhaseId();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			
 			e.printStackTrace();
 		}
+
 		
 	/*	try {
 			dao.fillClimberList(allClimbers);
@@ -131,6 +136,7 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 	
 	public void update()
 	{		
+		long startTime = System.currentTimeMillis();
 		toggleTimer++;
 
 		int toggleRound = 0;
@@ -142,12 +148,13 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
+		showRound = activeRound;
 		
-		if (toggleTimer < 10)
+		if (toggleTimer < 3)
 		{
 			showRound = activeRound;
 		}
-		else if (toggleTimer < 20)
+		else if (toggleTimer < 6)
 		{
 			if (activeRound == toggleRound)
 			{
@@ -168,8 +175,6 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 		allBoulderScores.clear();
 		allScoresCards.clear();
 		allRankedScoreCards.clear();
-
-	
 		
 		try {
 			eventInfo = dao.fillEventInfo();
@@ -185,7 +190,7 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 			e.printStackTrace();
 		}
 		try {
-			dao.fillBoulderScoreList(allBoulderScores, showRound);
+			dao.fillBoulderScoreList(allBoulderScores, showRound, activePhaseId, activeEventId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -257,6 +262,7 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 		updateContents();
 		repaint();	
 		updateTimer.start();
+		System.out.println(System.currentTimeMillis() - startTime);
 	}
 	
 	public void handleScoreBoardEvent(/*ScoreBoardEvent event*/)

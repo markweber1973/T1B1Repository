@@ -23,7 +23,7 @@ class ScoreConsumer implements Runnable
 	   
 	public void run() 
 	{
-		url_update_score = "http://BoulderServer:8888/update_score_use_get.php";
+		url_update_score = "http://BoulderServer:8888/update_score_use_get_extended.php";
 		
 		try 
 		{
@@ -81,7 +81,10 @@ class ScoreConsumer implements Runnable
     { 			
 		int finished = 0;
         if (producedScore.getFinished()) finished = 1;
-		
+
+		int started = 0;
+        if (producedScore.getStarted()) started = 1;        
+        
         int topped = 0;
         if (producedScore.getTopped()) topped = 1;
 
@@ -93,7 +96,11 @@ class ScoreConsumer implements Runnable
 		{
 			param = "boulderNumber=" + URLEncoder.encode(String.valueOf(producedScore.getBoulderNumber()),"UTF-8")+
 			"&startNumber="          + URLEncoder.encode(String.valueOf(producedScore.getStartNumber()),"UTF-8")+
+			"&eventId="          + URLEncoder.encode(String.valueOf(producedScore.getEventId()),"UTF-8")+
+			"&phaseId="          + URLEncoder.encode(String.valueOf(producedScore.getPhaseId()),"UTF-8")+
+			"&roundId="          + URLEncoder.encode(String.valueOf(producedScore.getRoundId()),"UTF-8")+
 			"&finished="             + URLEncoder.encode(String.valueOf(finished),"UTF-8")+
+			"&started="             + URLEncoder.encode(String.valueOf(started),"UTF-8")+
 			"&topped="               + URLEncoder.encode(String.valueOf(topped),"UTF-8")+
 			"&topAttempts="          + URLEncoder.encode(String.valueOf(producedScore.getTopAttempts()),"UTF-8")+
 			"&bonussed="             + URLEncoder.encode(String.valueOf(bonussed),"UTF-8")+

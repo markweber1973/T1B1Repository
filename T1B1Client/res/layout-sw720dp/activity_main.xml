@@ -1,0 +1,46 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+	<Button
+	    android:id="@+id/set_boulder_number_button"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:layout_alignParentTop="true"
+	    android:layout_marginTop="51dp"
+	    android:gravity="center_horizontal|top"
+	    android:text="@string/set_boulder_id"
+	    android:textSize="@dimen/padding_huge" />
+
+	<Button
+	    android:id="@+id/exit_app_button"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    android:layout_alignParentLeft="true"
+	    android:text="@string/exit_app_id"
+	    android:textSize="@dimen/padding_huge" />
+
+	<Button
+	    android:id="@+id/enter_match_data_button"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:layout_below="@+id/get_startlist_button"
+	    android:layout_marginTop="65dp"
+	    android:text="@string/enter_match_data_id"
+	    android:textSize="@dimen/padding_huge" />
+
+	<Button
+	    android:id="@+id/get_startlist_button"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:layout_below="@+id/set_boulder_number_button"
+	    android:layout_marginTop="93dp"
+	    android:text="@string/get_startlist_id"
+	    android:textSize="@dimen/padding_huge" />
+		
+</RelativeLayout>

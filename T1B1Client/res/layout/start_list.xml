@@ -6,7 +6,7 @@
 	<!-- Main ListView 
 		 Always give id value as list(@android:id/list)
 	-->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout 
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal" >
@@ -52,13 +52,15 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"/>
    
- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ <LinearLayout
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal" >   
     
 		<Button
 		    android:id="@+id/ok_button"
+		    style="@style/ButtonStyle"
+		    android:background="@drawable/custom_button"		    
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_gravity="bottom"
@@ -67,7 +69,9 @@
 		    android:textSize="@dimen/padding_huge" />
 		
 		<Button
-		    android:id="@+id/reload_button"
+		    android:id="@+id/reload_button"	
+		    style="@style/ButtonStyle"
+		    android:background="@drawable/custom_button"		    	    
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_gravity="bottom"

@@ -66,14 +66,19 @@ public class MySQLAccess {
 
 	
 	
-	public void fillBoulderScoreList(List<BoulderScore> boulderScoreList, int round) throws Exception
+	public void fillBoulderScoreList(List<BoulderScore> boulderScoreList, int round, int phase, int event) throws Exception
 	{
+        //long startTime = System.currentTimeMillis();
+        
+		
 		Class.forName("com.mysql.jdbc.Driver");
 		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		
 		try {
-
+		
 			statement = connect.createStatement();
-			resultSet = statement.executeQuery("select * from T1B1.scores WHERE roundId = " + round);	
+			resultSet = statement.executeQuery("select * from T1B1.scores WHERE (roundId = " + round + 
+					" AND phaseId = " + phase + " AND eventId = " + event + ")");	
 			while (resultSet.next()) {
 				
 				int startNumber = resultSet.getInt("startNumber");
@@ -88,7 +93,7 @@ public class MySQLAccess {
 				Score localScore = new Score((topped==1), topAttempts, (bonussed==1), bonusAttempts, attempts);
 				BoulderScore localBoulderScore = new BoulderScore(localScore, boulderNumber, startNumber, (finished == 1));
 				boulderScoreList.add(localBoulderScore);
-				localScore.log();
+				//localScore.log();
 			}
 		
 
@@ -96,6 +101,7 @@ public class MySQLAccess {
 			throw e;
 		} finally {
 			close();
+			//System.out.println(System.currentTimeMillis() - startTime);
 		}
 	}
 
@@ -121,6 +127,52 @@ public class MySQLAccess {
 		}
 		return roundId;			
 	}	
+	
+	public int getActivePhaseId() throws Exception
+	{
+		Class.forName("com.mysql.jdbc.Driver");
+		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		int phaseId;
+		
+		try {
+
+			statement = connect.createStatement();
+			resultSet = statement.executeQuery("select * from T1B1.activephase");	
+			resultSet.next();
+			phaseId = resultSet.getInt("phaseId");
+			
+			resultSet.close();
+			statement.close();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			close();
+		}
+		return phaseId;			
+	}		
+	
+	public int getActiveEventId() throws Exception
+	{
+		Class.forName("com.mysql.jdbc.Driver");
+		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		int eventId;
+		
+		try {
+
+			statement = connect.createStatement();
+			resultSet = statement.executeQuery("select * from T1B1.activeevent");	
+			resultSet.next();
+			eventId = resultSet.getInt("eventId");
+			
+			resultSet.close();
+			statement.close();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			close();
+		}
+		return eventId;			
+	}
 	
 	public int getToggleRoundId() throws Exception
 	{

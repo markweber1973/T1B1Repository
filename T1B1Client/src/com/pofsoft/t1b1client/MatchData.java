@@ -9,6 +9,8 @@ public class MatchData extends Application {
 	private PolePositionedClimberList matchData = null; 
 
 	int boulderId;
+	String eventId;
+	String phaseId;
 	
 	public MatchData()
 	{
@@ -26,9 +28,30 @@ public class MatchData extends Application {
 		return boulderId;
 	}
 	
-	public void addPolePositionedClimber(int startNumber, int polePosition, String firstName, String lastName)
+	public void setEventId(String eventId)
 	{
-		matchData.addPolePositionedClimber(startNumber, polePosition, firstName, lastName);
+		this.eventId = eventId;
+	}
+	
+	public String getEventId()
+	{
+		return eventId;
+	}	
+	
+	public void setPhaseId(String phaseId)
+	{
+		this.phaseId = phaseId;
+	}
+	
+	public String getPhaseId()
+	{
+		return phaseId;
+	}		
+	
+	public void addPolePositionedClimber(int startNumber, int polePosition, int sequence, String firstName, String lastName,
+			int eventId, int phaseId, int roundId)
+	{
+		matchData.addPolePositionedClimber(startNumber, polePosition, sequence, firstName, lastName, eventId, phaseId, roundId);
 	}
 	
 	public PolePositionedClimber getFirst()

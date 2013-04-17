@@ -69,12 +69,12 @@ public class EnterMatchData extends Activity {
         {
         	public void onClick(View v) 
         	{ 
-        	
-        		if (globalMatchData.hasNext())
-        		{
-        			currentClimber = globalMatchData.getNext();
-        		}
-        		updateUI();
+        		confirmNextClimber();
+        		//if (globalMatchData.hasNext())
+        		//{
+        		//	currentClimber = globalMatchData.getNext();
+        		//}
+        		//updateUI();
         	}
         });
 
@@ -83,11 +83,12 @@ public class EnterMatchData extends Activity {
         {
         	public void onClick(View v) 
         	{ 
-        		if (globalMatchData.hasPrevious())
-        		{
-        			currentClimber = globalMatchData.getPrevious();
-        		}
-        		updateUI();
+        		confirmPreviousClimber();
+        		//if (globalMatchData.hasPrevious())
+        		//{
+        		//	currentClimber = globalMatchData.getPrevious();
+        		//}
+        		//updateUI();
         	}
         });
 		
@@ -179,7 +180,7 @@ public class EnterMatchData extends Activity {
 		}		
 		currentScore.setText(score);		
 		
-		nextClimberButton.setEnabled(globalMatchData.hasNext() && currentClimber.isFinished());
+		nextClimberButton.setEnabled(globalMatchData.hasNext());
 		previousClimberButton.setEnabled(globalMatchData.hasPrevious());
 		finishedButton.setEnabled(!currentClimber.isFinished());
 		topButton.setEnabled(!currentClimber.topReached() && !currentClimber.isFinished());
@@ -192,9 +193,11 @@ public class EnterMatchData extends Activity {
     {
 		 ScoreProducerQueueEntry producerQueueEntry = 
 	 			new ScoreProducerQueueEntry(globalMatchData.getBoulderId(), currentClimber.getStartNumber(), 
-	 					currentClimber.isFinished(), currentClimber.topReached(), 
+	 					currentClimber.isFinished(), currentClimber.isStarted(),
+	 					currentClimber.topReached(), 
 	 					currentClimber.attemptsToTop(), currentClimber.bonusReached(), 
-	 					currentClimber.attemptsToBonus(), currentClimber.attempts());
+	 					currentClimber.attemptsToBonus(), currentClimber.attempts(),
+	 					currentClimber.getEventId(), currentClimber.getPhaseId(), currentClimber.getRoundId());
 	     	producerQueue.add(producerQueueEntry);   	
     }
     @Override
@@ -215,6 +218,43 @@ public class EnterMatchData extends Activity {
         .setNegativeButton("No", null)
         .show();
     }
+    
+    private void confirmNextClimber()
+    {
+        new AlertDialog.Builder(this)
+        .setIcon(android.R.drawable.ic_dialog_alert)
+        .setTitle("Leaving current climber")
+        .setMessage("Go to next climber ?")
+        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+    {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+        	currentClimber = globalMatchData.getNext();
+		    updateUI();  
+        }
 
+    })
+    .setNegativeButton("No", null)
+    .show();   	
+    }
+
+    private void confirmPreviousClimber()
+    {
+        new AlertDialog.Builder(this)       
+        .setIcon(android.R.drawable.ic_dialog_alert)
+        .setTitle("Leaving current climber")
+        .setMessage("Go to previous climber ?")
+        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+    {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+        	currentClimber = globalMatchData.getPrevious();
+		    updateUI();  
+        }
+
+    })
+    .setNegativeButton("No", null)
+    .show();   	
+    }    
 }
 

@@ -27,7 +27,7 @@ public  class UpdateScoreBoardTimer
             }
         };
         //periodicTriggerHandle = scheduler.scheduleAtFixedRate(periodicTrigger, 1000, 1000, TimeUnit.MILLISECONDS);
-        periodicTriggerHandle = scheduler.schedule(periodicTrigger, 1000, TimeUnit.MILLISECONDS);
+        periodicTriggerHandle = scheduler.schedule(periodicTrigger, 2000, TimeUnit.MILLISECONDS);
     };
     
     public void stop()

@@ -63,7 +63,8 @@
 
         <Button
             android:id="@+id/okButton"
-            style="@android:style/TextAppearance.Large"
+            style="@style/ButtonStyle"
+		    android:background="@drawable/custom_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -73,7 +74,8 @@
 
         <Button
             android:id="@+id/cancelButton"
-            style="@android:style/TextAppearance.Large"
+		    style="@style/ButtonStyle"
+		    android:background="@drawable/custom_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

@@ -6,6 +6,7 @@ public class ActiveScore {
 	private ClimberActionStack climberActionStack;
 	private int nrOfAttempts;
 	private boolean finished;
+	private boolean started;
 	
 	public ActiveScore()
 	{
@@ -24,6 +25,16 @@ public class ActiveScore {
 	public boolean getFinished()
 	{
 		return finished;
+	}
+	
+	public void setStarted()
+	{
+		started = true;
+	}
+	
+	public boolean getStarted()
+	{
+		return started;
 	}
 	
 	public void addAttempt()
