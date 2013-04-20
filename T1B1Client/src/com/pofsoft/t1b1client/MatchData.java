@@ -4,99 +4,113 @@ package com.pofsoft.t1b1client;
 
 import android.app.Application;
 
-public class MatchData extends Application {
+public class MatchData extends Application {	
+	private RoundList roundList = null; 
+	int eventId;
+	int phaseId;
+	String eventName;
+	String phaseName;
 	
-	private PolePositionedClimberList matchData = null; 
-
-	int boulderId;
-	String eventId;
-	String phaseId;
+	public MatchData(int eventId, int phaseId)
+	{
+		this.eventId = eventId;
+		this.phaseId = phaseId;
+		roundList = new RoundList();
+	}
 	
 	public MatchData()
 	{
-		matchData = new PolePositionedClimberList();
-		boulderId = 0;
+
 	}
 		
-	public void setBoulderId(int boulderId)
-	{
-		this.boulderId = boulderId;
-	}
-	
-	public int getBoulderId()
-	{
-		return boulderId;
-	}
-	
-	public void setEventId(String eventId)
+	public void setEventId(int eventId)
 	{
 		this.eventId = eventId;
 	}
+
+	public void setPhaseId(int phaseId)
+	{
+		this.phaseId = phaseId;
+	}	
+
+	public void setEventName(String name)
+	{
+		this.eventName = name;
+	}
+
+	public void setPhaseName(String name)
+	{
+		this.phaseName = name;
+	}		
 	
-	public String getEventId()
+	public int getEventId()
 	{
 		return eventId;
 	}	
-	
-	public void setPhaseId(String phaseId)
-	{
-		this.phaseId = phaseId;
-	}
-	
-	public String getPhaseId()
+		
+	public int getPhaseId()
 	{
 		return phaseId;
 	}		
-	
-	public void addPolePositionedClimber(int startNumber, int polePosition, int sequence, String firstName, String lastName,
-			int eventId, int phaseId, int roundId)
+
+	public String getEventName()
 	{
-		matchData.addPolePositionedClimber(startNumber, polePosition, sequence, firstName, lastName, eventId, phaseId, roundId);
+		return eventName;
+	}	
+		
+	public String getPhaseName()
+	{
+		return phaseName;
+	}		
+	
+	public void addRound(Round round)
+	{
+		roundList.add(round);
 	}
 	
-	public PolePositionedClimber getFirst()
+	public Round getFirst()
 	{
-		return (matchData.getFirst());
+		return (roundList.getFirst());
 	}
 	
-	public PolePositionedClimber getPrevious()
+	public Round getPrevious()
 	{
-		return (matchData.getPrevious());
+		return (roundList.getPrevious());
 	}
 	
-	public PolePositionedClimber getNext()
+	public Round getNext()
 	{
-		return (matchData.getNext());
+		return (roundList.getNext());
 	}
 	
 	public boolean hasNext()
 	{
-		return (matchData.hasNext());
+		return (roundList.hasNext());
 	}
 	
 	public boolean isEmpty()
 	{
-		return (matchData.isEmpty());
+		return (roundList.isEmpty());
 	}
 	
 	public boolean hasPrevious()
 	{
-		return (matchData.hasPrevious());
+		return (roundList.hasPrevious());
 	}
 	
 	public void sort()
 	{
-		matchData.sort();
+		roundList.sort();
 	}
 	
 	public void clear()
 	{
-		matchData = new PolePositionedClimberList();
+		roundList = new RoundList();
 	}
 	
 	public void reset()
 	{
-		matchData.reset();
+		roundList.reset();
 	}
 }
 	

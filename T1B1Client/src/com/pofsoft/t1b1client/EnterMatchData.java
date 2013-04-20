@@ -62,7 +62,7 @@ public class EnterMatchData extends Activity {
 		attemptsDone = (TextView)findViewById(R.id.attemptsDoneTextView);
 		
 		globalMatchData = ((MatchData)getApplicationContext());
-		currentClimber = globalMatchData.getFirst();
+//		currentClimber = globalMatchData.getFirst();
 		
 		nextClimberButton = (Button) findViewById(R.id.nextClimberButton); 
 		nextClimberButton.setOnClickListener(new View.OnClickListener()
@@ -186,19 +186,19 @@ public class EnterMatchData extends Activity {
 		topButton.setEnabled(!currentClimber.topReached() && !currentClimber.isFinished());
 		bonusButton.setEnabled(!currentClimber.bonusReached() && !currentClimber.isFinished());
 		attemptButton.setEnabled(!currentClimber.isFinished() && !currentClimber.topReached());
-	    currentBoulder.setText(String.valueOf(globalMatchData.getBoulderId()));
+//	    currentBoulder.setText(String.valueOf(globalMatchData.getBoulderId()));
 	}
 
     private void updateScoreDataOnServer()
     {
-		 ScoreProducerQueueEntry producerQueueEntry = 
-	 			new ScoreProducerQueueEntry(globalMatchData.getBoulderId(), currentClimber.getStartNumber(), 
-	 					currentClimber.isFinished(), currentClimber.isStarted(),
-	 					currentClimber.topReached(), 
-	 					currentClimber.attemptsToTop(), currentClimber.bonusReached(), 
-	 					currentClimber.attemptsToBonus(), currentClimber.attempts(),
-	 					currentClimber.getEventId(), currentClimber.getPhaseId(), currentClimber.getRoundId());
-	     	producerQueue.add(producerQueueEntry);   	
+//		 ScoreProducerQueueEntry producerQueueEntry = 
+//	 			new ScoreProducerQueueEntry(globalMatchData.getBoulderId(), currentClimber.getStartNumber(), 
+//	 					currentClimber.isFinished(), currentClimber.isStarted(),
+//	 					currentClimber.topReached(), 
+//	 					currentClimber.attemptsToTop(), currentClimber.bonusReached(), 
+//	 					currentClimber.attemptsToBonus(), currentClimber.attempts(),
+//	 					currentClimber.getEventId(), currentClimber.getPhaseId(), currentClimber.getRoundId());
+//	     	producerQueue.add(producerQueueEntry);   	
     }
     @Override
     public void onBackPressed() {
@@ -229,7 +229,7 @@ public class EnterMatchData extends Activity {
     {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-        	currentClimber = globalMatchData.getNext();
+ //       	currentClimber = globalMatchData.getNext();
 		    updateUI();  
         }
 
@@ -248,7 +248,7 @@ public class EnterMatchData extends Activity {
     {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-        	currentClimber = globalMatchData.getPrevious();
+//        	currentClimber = globalMatchData.getPrevious();
 		    updateUI();  
         }
 

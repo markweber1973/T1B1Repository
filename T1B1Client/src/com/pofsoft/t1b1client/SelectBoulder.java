@@ -27,7 +27,7 @@ public class SelectBoulder extends Activity
         numberOfBouldersGroup = (RadioGroup) findViewById(R.id.bouldersRadioGroup);
         globalMatchData = ((MatchData)getApplicationContext());
 
-        activeBoulder = globalMatchData.getBoulderId();
+//        activeBoulder = globalMatchData.getBoulderId();
         numberOfBouldersGroup.check(activeBoulder);
         
         okButton = (Button) findViewById(R.id.okButton);       
@@ -94,11 +94,13 @@ public class SelectBoulder extends Activity
     
     private void setBoulderId(int boulderId)
     {
-        globalMatchData.setBoulderId(boulderId);      
+ //       globalMatchData.setBoulderId(boulderId);      
     }
     
     private int getBoulderId()
     { 
-        return (globalMatchData.getBoulderId());      
+    	return 1;
+    	
+       // return (globalMatchData.getBoulderId());      
     }
 };

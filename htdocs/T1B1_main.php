@@ -31,6 +31,7 @@
 	    <li><a href="active_event_overview.php">Active event overview</a></li>
 	    <li><a href="active_phase_overview.php">Active phase overview</a></li>
 	    <li><a href="get_all_climbers_in_active_round_active_event.php">Overview of active round</a></li>
+	    <li><a href="show_phase_definition.php">Overview of active phase definition</a></li>
       </ul>
 </td>
   </tr>

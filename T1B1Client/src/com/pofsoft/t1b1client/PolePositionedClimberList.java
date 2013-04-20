@@ -18,14 +18,7 @@ public class PolePositionedClimberList {
 		startList.add(climber);
 		Collections.sort(startList, new PolePositionedClimberComparator());
 	}
-	
-	public void addPolePositionedClimber(int startNumber, int polePosition, int sequence, String firstName, String lastName,
-			int eventId, int phaseId, int roundId)
-	{
-		startList.add(new PolePositionedClimber(startNumber, polePosition, sequence, firstName, lastName, eventId, phaseId, roundId));
-		Collections.sort(startList, new PolePositionedClimberComparator());
-	}
-	
+		
 	public Vector<PolePositionedClimber> getList()
 	{
 		return startList;

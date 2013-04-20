@@ -22,9 +22,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 public class GetStartList extends ListActivity
 {
+
+	private String activeEventName;
+	private String activePhaseName;
+	private int activePhaseId;
+	private int activeEventId;
+	
+	private TextView phaseName;
+	private TextView eventName;
 
 	// Progress Dialog
 	private ProgressDialog pDialog;
@@ -36,18 +45,24 @@ public class GetStartList extends ListActivity
 	boolean sex = false;
 	
 	private static final String url_get_startlist = "http://BoulderServer:8888/get_all_climbers_in_active_phase_active_event.php";
-	
-	// JSON Node names
+			
 	private static final String TAG_STARTNUMBER = "startnumber";
 	private static final String TAG_POLEPOSITION = "poleposition";
-	private static final String TAG_FIRSTNAME = "firstName";
-	private static final String TAG_LASTNAME = "lastName";	
-	private static final String TAG_ROUNDDEFINITION = "roundDefinition";
+	private static final String TAG_FIRSTNAME = "firstname";
+	private static final String TAG_LASTNAME = "lastname";	
+	private static final String TAG_ROUNDID = "roundid";
+	private static final String TAG_ROUNDNAME = "roundname";
+	private static final String TAG_ROUNDSEQUENCE = "roundsequence";
+	private static final String TAG_ROUNDENROLLMENTS = "roundenrollments";
+
+
+	private static final String TAG_PHASEDEFINITION = "phasedefinition";
 	
 	private static final String TAG_SEQUENCE = "sequence";
-	private static final String TAG_EVENTID = "eventId";
-	private static final String TAG_PHASEID = "phaseId";
-	private static final String TAG_ROUNDID = "roundId";
+	private static final String TAG_EVENTID = "activeeventid";
+	private static final String TAG_PHASEID = "activephaseid";
+	private static final String TAG_EVENTDESCRIPTION = "activeeventdescription";
+	private static final String TAG_PHASEDESCRIPTION = "activephasedescription";
 	
 	private MatchData globalMatchData;
 
@@ -55,9 +70,10 @@ public class GetStartList extends ListActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.start_list);
-			
-		//sqliteHelper.getAllClimbers();
-		//List<com.pofsoft.datastruct.Climber> myList = sqliteHelper.getAllClimbers();
+					
+		phaseName = (TextView)findViewById(R.id.phasenameLabel);
+		eventName = (TextView)findViewById(R.id.eventnameLabel);
+
 		
 		okButton = (Button) findViewById(R.id.ok_button);       
 		okButton.setOnClickListener(new View.OnClickListener()
@@ -102,7 +118,7 @@ public class GetStartList extends ListActivity
 		protected String doInBackground(String... args) {
 			URL url = null;
 			HttpURLConnection urlConnection = null;
-			
+						
 			try 
 			{
 				url = new URL(url_get_startlist);
@@ -146,7 +162,8 @@ public class GetStartList extends ListActivity
 					setListAdapter(adapter);
 				}
 			});
-
+			phaseName.setText(activePhaseName);
+			eventName.setText(activeEventName);
 		}
 		
 		
@@ -185,63 +202,76 @@ public class GetStartList extends ListActivity
 			    }
 			}
 			try {
-				jObj = new JSONObject(json);
-				JSONArray startlist = jObj.getJSONArray(TAG_ROUNDDEFINITION);
-				int iterator = 0;
-								
 				globalMatchData.clear();
-				for (iterator = 0; iterator < startlist.length(); iterator++)
+				jObj = new JSONObject(json);
+				activePhaseName = jObj.getString(TAG_PHASEDESCRIPTION);		
+				activeEventName = jObj.getString(TAG_EVENTDESCRIPTION);			
+				activeEventId = jObj.getInt(TAG_EVENTID);
+				activePhaseId = jObj.getInt(TAG_PHASEID);
+				
+				globalMatchData.setEventId(activeEventId);
+				globalMatchData.setPhaseId(activePhaseId);
+				globalMatchData.setEventName(activeEventName);
+				globalMatchData.setPhaseName(activePhaseName);				
+				
+				JSONArray roundList = jObj.getJSONArray(TAG_PHASEDEFINITION);
+				int rounditerator = 0;				
+				
+			
+				for (rounditerator = 0; rounditerator < roundList.length(); rounditerator++)
 				{
-					JSONObject test =  startlist.getJSONObject(iterator);
-					String startnumber = (String) test.get(TAG_STARTNUMBER);
-					String lastName = (String) test.get(TAG_LASTNAME);
-					String firstName = (String) test.get(TAG_FIRSTNAME);
-					String poleposition = (String) test.get(TAG_POLEPOSITION);
+					JSONObject round =  roundList.getJSONObject(rounditerator);
 					
-					String sequence = (String) test.get(TAG_SEQUENCE);
-					String eventid = (String) test.get(TAG_EVENTID);
-					String phaseid = (String) test.get(TAG_PHASEID);
-					String roundid = (String) test.get(TAG_ROUNDID);
-												
-					globalMatchData.addPolePositionedClimber(Integer.valueOf(startnumber), Integer.valueOf(poleposition), 
-							Integer.valueOf(sequence), firstName, lastName, 
-							Integer.valueOf(eventid),Integer.valueOf(phaseid),Integer.valueOf(roundid));			
+					int roundid = round.getInt(TAG_ROUNDID);
+					String roundname = round.getString(TAG_ROUNDNAME);
+					int roundsequence = round.getInt(TAG_ROUNDSEQUENCE);
+					Round localRound = new Round(roundsequence, roundname, roundid);
+					
+					JSONArray enrollmentList = round.getJSONArray(TAG_ROUNDENROLLMENTS);
+					
+					int enrollmentiterator = 0;
+					for (enrollmentiterator = 0; enrollmentiterator < enrollmentList.length(); enrollmentiterator++)
+					{
+						JSONObject enrollment =  enrollmentList.getJSONObject(enrollmentiterator);
+					    
+						int startnumber = enrollment.getInt(TAG_STARTNUMBER);
+						int poleposition = enrollment.getInt(TAG_POLEPOSITION);
+						
+						String lastName = enrollment.getString(TAG_LASTNAME);
+						String firstName = enrollment.getString(TAG_FIRSTNAME);
+						Climber localClimber = new Climber(startnumber, firstName, lastName);
+						PolePositionedClimber localPolePositionedClimer = new PolePositionedClimber(localClimber, poleposition);
+						localRound.addPolePositionedClimber(localPolePositionedClimer);
+					}	
+					globalMatchData.addRound(localRound);
+					
 				}
-				
-				
-				
+												
 				if (!globalMatchData.isEmpty())
 				{
 					globalMatchData.sort();					
 					PolePositionedClimber currentClimber;					
-					currentClimber = globalMatchData.getFirst();
+				//	currentClimber = globalMatchData.getFirst();
 					HashMap<String, String> map = new HashMap<String, String>();
-					map.put(TAG_STARTNUMBER, Integer.toString(currentClimber.getStartNumber()));
-					map.put(TAG_FIRSTNAME, currentClimber.firstName());
-					map.put(TAG_LASTNAME, currentClimber.lastName());
-					map.put(TAG_POLEPOSITION, Integer.toString(currentClimber.getPolePosition()));
+//					map.put(TAG_STARTNUMBER, Integer.toString(currentClimber.getStartNumber()));
+//					map.put(TAG_FIRSTNAME, currentClimber.firstName());
+//					map.put(TAG_LASTNAME, currentClimber.lastName());
+//					map.put(TAG_POLEPOSITION, Integer.toString(currentClimber.getPolePosition()));
 					startList.add(map);
 					
 					while (globalMatchData.hasNext())
 					{											
-						currentClimber = globalMatchData.getNext();
+				//		currentClimber = globalMatchData.getNext();
 						map = new HashMap<String, String>();
-						map.put(TAG_STARTNUMBER, Integer.toString(currentClimber.getStartNumber()));
-						map.put(TAG_FIRSTNAME, currentClimber.firstName());
-						map.put(TAG_LASTNAME, currentClimber.lastName());
-						map.put(TAG_POLEPOSITION, Integer.toString(currentClimber.getPolePosition()));
+//						map.put(TAG_STARTNUMBER, Integer.toString(currentClimber.getStartNumber()));
+//						map.put(TAG_FIRSTNAME, currentClimber.firstName());
+//						map.put(TAG_LASTNAME, currentClimber.lastName());
+//						map.put(TAG_POLEPOSITION, Integer.toString(currentClimber.getPolePosition()));
 						startList.add(map);
 					}	
 					globalMatchData.reset();
 				}
-				
-
-								
-	//			int success = jObj.getInt(TAG_SUCCESS);
-	//			int x = success;
-				
-				
-				
+		
 				
 			} catch (JSONException e) {
 				Log.e("JSON Parser", "Error parsing data " + e.toString());
@@ -249,6 +279,7 @@ public class GetStartList extends ListActivity
 		}					
 		
 	}
+	
 
 }
 
