@@ -1,6 +1,6 @@
 package com.pofsoft.t1b1client;
 import android.os.Bundle;
-import android.app.ListActivity;
+import android.app.Activity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,22 +11,22 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ListAdapter;
-import android.widget.SimpleAdapter;
+
+import android.widget.ExpandableListView;
+
 import android.widget.TextView;
 
-public class GetStartList extends ListActivity
+public class GetStartList extends Activity
 {
-
+    private ExpandableListView mExpandableList;
+    
 	private String activeEventName;
 	private String activePhaseName;
 	private int activePhaseId;
@@ -37,9 +37,8 @@ public class GetStartList extends ListActivity
 
 	// Progress Dialog
 	private ProgressDialog pDialog;
-	ArrayList<HashMap<String, String>> startList;
-	private Button okButton;
-	private Button reloadButton;
+	
+
 	static String json = "";
 	static JSONObject jObj = null;
 	boolean sex = false;
@@ -58,7 +57,6 @@ public class GetStartList extends ListActivity
 
 	private static final String TAG_PHASEDEFINITION = "phasedefinition";
 	
-	private static final String TAG_SEQUENCE = "sequence";
 	private static final String TAG_EVENTID = "activeeventid";
 	private static final String TAG_PHASEID = "activephaseid";
 	private static final String TAG_EVENTDESCRIPTION = "activeeventdescription";
@@ -73,29 +71,7 @@ public class GetStartList extends ListActivity
 					
 		phaseName = (TextView)findViewById(R.id.phasenameLabel);
 		eventName = (TextView)findViewById(R.id.eventnameLabel);
-
-		
-		okButton = (Button) findViewById(R.id.ok_button);       
-		okButton.setOnClickListener(new View.OnClickListener()
-        {
-        	public void onClick(View v) 
-        	{ 
-        		finish();
-        	}
-        });
-		
-		reloadButton = (Button) findViewById(R.id.reload_button);       
-		reloadButton.setOnClickListener(new View.OnClickListener()
-        {
-        	public void onClick(View v) 
-        	{ 
-        		startList = new ArrayList<HashMap<String, String>>();	
-        		
-        		new LoadStartList().execute();               		
-        	}
-        });	
-			
-		startList = new ArrayList<HashMap<String, String>>();	
+		mExpandableList = (ExpandableListView)findViewById(R.id.phaseDefinitionList);
 		new LoadStartList().execute();		
 		globalMatchData = ((MatchData)getApplicationContext());			
 	}
@@ -153,13 +129,41 @@ public class GetStartList extends ListActivity
 					/**
 					 * Updating parsed JSON data into ListView
 					 * */
-													
-					ListAdapter adapter = new SimpleAdapter(
-							GetStartList.this, startList,
-							R.layout.list_item, new String[] { TAG_STARTNUMBER,	TAG_POLEPOSITION, TAG_FIRSTNAME, TAG_LASTNAME},
-							new int[] { R.id.startnumber, R.id.poleposition, R.id.firstName, R.id.lastName });
-					// updating listview
-					setListAdapter(adapter);
+			        ArrayList<Parent> arrayParents = new ArrayList<Parent>();
+			        globalMatchData.reset();
+			        
+
+			        int numberOfRounds = globalMatchData.getSize();
+			        //here we set the parents and the children
+			        for (int i = 0; i < numberOfRounds; i++){
+			        	Round currentRound = globalMatchData.getRound(i);
+			            //for each "i" create a new Parent object to set the title and the children
+			            Parent parent = new Parent();
+			            parent.setTitle(currentRound.name());
+			             
+			            ArrayList<HashMap<String, String>> arrayChildren = new ArrayList<HashMap<String, String>>();
+			            
+			            int numberOfClimbers = currentRound.getSize();
+			            for (int j = 0; j < numberOfClimbers; j++) {
+			            	PolePositionedClimber currentClimber = currentRound.getPolePositionedClimber(j);
+			            	
+							HashMap<String, String> map = new HashMap<String, String>();
+							map.put(TAG_STARTNUMBER, Integer.toString(currentClimber.getStartNumber()));
+							map.put(TAG_FIRSTNAME, currentClimber.firstName());
+							map.put(TAG_LASTNAME, currentClimber.lastName());
+							map.put(TAG_POLEPOSITION, Integer.toString(currentClimber.getPolePosition()));			            	
+							arrayChildren.add(map);
+			                //arrayChildren.add(currentClimber.lastName());
+			            }
+			            parent.setArrayChildren(arrayChildren);
+			 
+			            //in this array we add the Parent object. We will use the arrayParents at the setAdapter
+			            arrayParents.add(parent);
+			        }
+			 
+			        //sets the adapter that provides data to the list.
+			        mExpandableList.setAdapter(new MyCustomAdapter(GetStartList.this,arrayParents));													
+
 				}
 			});
 			phaseName.setText(activePhaseName);
@@ -246,31 +250,8 @@ public class GetStartList extends ListActivity
 					globalMatchData.addRound(localRound);
 					
 				}
-												
-				if (!globalMatchData.isEmpty())
-				{
-					globalMatchData.sort();					
-					PolePositionedClimber currentClimber;					
-				//	currentClimber = globalMatchData.getFirst();
-					HashMap<String, String> map = new HashMap<String, String>();
-//					map.put(TAG_STARTNUMBER, Integer.toString(currentClimber.getStartNumber()));
-//					map.put(TAG_FIRSTNAME, currentClimber.firstName());
-//					map.put(TAG_LASTNAME, currentClimber.lastName());
-//					map.put(TAG_POLEPOSITION, Integer.toString(currentClimber.getPolePosition()));
-					startList.add(map);
-					
-					while (globalMatchData.hasNext())
-					{											
-				//		currentClimber = globalMatchData.getNext();
-						map = new HashMap<String, String>();
-//						map.put(TAG_STARTNUMBER, Integer.toString(currentClimber.getStartNumber()));
-//						map.put(TAG_FIRSTNAME, currentClimber.firstName());
-//						map.put(TAG_LASTNAME, currentClimber.lastName());
-//						map.put(TAG_POLEPOSITION, Integer.toString(currentClimber.getPolePosition()));
-						startList.add(map);
-					}	
-					globalMatchData.reset();
-				}
+
+			    globalMatchData.reset();		
 		
 				
 			} catch (JSONException e) {

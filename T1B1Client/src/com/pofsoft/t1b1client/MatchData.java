@@ -112,5 +112,15 @@ public class MatchData extends Application {
 	{
 		roundList.reset();
 	}
+	
+	public int getSize()
+	{
+		return roundList.getSize();
+	}
+
+	public Round getRound(int index)
+	{
+		return roundList.getRound(index);
+	}
 }
 	

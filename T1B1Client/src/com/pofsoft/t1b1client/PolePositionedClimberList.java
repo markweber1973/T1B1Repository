@@ -125,4 +125,14 @@ public class PolePositionedClimberList {
 	{
 		currentIndex = 0;
 	}
+	
+	public int getSize()
+	{
+		return startList.size();
+	}
+	
+	public PolePositionedClimber getPolePositionedClimber(int index)
+	{
+		return startList.get(index);
+	}
 }

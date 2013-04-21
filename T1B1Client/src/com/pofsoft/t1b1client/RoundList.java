@@ -125,4 +125,14 @@ public class RoundList {
 	{
 		currentIndex = 0;
 	}
+	
+	public int getSize()
+	{
+		return roundList.size();
+	}
+	
+	public Round getRound(int index)
+	{
+		return roundList.get(index);
+	}
 }

@@ -74,7 +74,9 @@ public class MainActivity extends Activity {
  
     private void getStartList()
     {
+    	
        	Intent intent = new Intent(this, GetStartList.class); 
+    	//Intent intent = new Intent(this, MyActivity.class); 
     	startActivity(intent);
     }
        

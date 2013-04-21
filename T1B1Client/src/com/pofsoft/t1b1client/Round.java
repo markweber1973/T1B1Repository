@@ -45,6 +45,16 @@ public class Round implements Comparable {
 		return roundId;
 	}	
 	
+	public int getSize()
+	{
+		return climbersInRound.getSize();
+	}
+	
+	public PolePositionedClimber getPolePositionedClimber(int index)
+	{
+		return climbersInRound.getPolePositionedClimber(index);
+	}
+	
 	public void addPolePositionedClimber(PolePositionedClimber climber)
 	{
 		climbersInRound.add(climber);
