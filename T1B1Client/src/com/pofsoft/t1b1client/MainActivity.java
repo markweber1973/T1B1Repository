@@ -82,7 +82,7 @@ public class MainActivity extends Activity {
        
     private void enterMatchData()
     {
-   // 	if (!globalMatchData.isEmpty())
+    	if (!globalMatchData.isEmpty())
     	{
     		Intent intent = new Intent(this, EnterMatchData.class); 
     		startActivity(intent);

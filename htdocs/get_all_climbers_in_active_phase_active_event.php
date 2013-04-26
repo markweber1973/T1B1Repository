@@ -43,7 +43,7 @@ function getActivePhaseId()
 <?php
 $response = array();
 
-$getallroundsquery= ("SELECT roundphaseenrollment.roundId, roundphaseenrollment.sequence, rounds.name".
+$getallroundsquery= ("SELECT roundphaseenrollment.roundId, roundphaseenrollment.sequence, rounds.name, rounds.nrofboulders, rounds.boulderprefix".
         " FROM roundphaseenrollment JOIN rounds ON (roundphaseenrollment.roundId=rounds.roundId) ".
 		" WHERE (roundphaseenrollment.eventId='".getActiveEventId()."' AND roundphaseenrollment.phaseId='".getActivePhaseId()."') ");
 
@@ -69,7 +69,8 @@ if (mysql_num_rows($result) > 0)
     	$rounddefinition["roundid"] = $roundId;
     	$rounddefinition["roundname"] = $row["name"];
     	$rounddefinition["roundsequence"] = $row["sequence"];  
-    	  	
+    	$rounddefinition["roundnrofboulders"] = $row["nrofboulders"];
+    	$rounddefinition["roundboulderprefix"] = $row["boulderprefix"];      	  	
 
     	// Define the query for retrieving all round enrollments   	
 		$getroundcontentquery= ("SELECT roundenrollment.startNumber, roundenrollment.polePosition, climbers.firstname, climbers.lastname".

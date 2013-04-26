@@ -18,7 +18,9 @@ import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 
+import android.widget.Button;
 import android.widget.ExpandableListView;
 
 import android.widget.TextView;
@@ -31,7 +33,8 @@ public class GetStartList extends Activity
 	private String activePhaseName;
 	private int activePhaseId;
 	private int activeEventId;
-	
+	private Button startButton;
+	private Button reloadButton;
 	private TextView phaseName;
 	private TextView eventName;
 
@@ -51,6 +54,9 @@ public class GetStartList extends Activity
 	private static final String TAG_LASTNAME = "lastname";	
 	private static final String TAG_ROUNDID = "roundid";
 	private static final String TAG_ROUNDNAME = "roundname";
+	private static final String TAG_BOULDERPREFIX = "roundboulderprefix";
+	private static final String TAG_NROFBOULDERS = "roundnrofboulders";
+
 	private static final String TAG_ROUNDSEQUENCE = "roundsequence";
 	private static final String TAG_ROUNDENROLLMENTS = "roundenrollments";
 
@@ -64,11 +70,49 @@ public class GetStartList extends Activity
 	
 	private MatchData globalMatchData;
 
+	private void startButtonClicked()
+	{
+		MyCustomAdapter myAdapter;
+		Parent myParent;
+		
+		for (int index = 0; index < mExpandableList.getExpandableListAdapter().getGroupCount(); index++)
+		{
+			boolean test;
+			myAdapter = (MyCustomAdapter)mExpandableList.getExpandableListAdapter();
+			myParent = myAdapter.getParent(index);	
+			test = myParent.isSelected();
+		}
+		myAdapter = (MyCustomAdapter)mExpandableList.getExpandableListAdapter();		
+	}
+	
+	private void reloadButtonClicked()
+	{
+		
+	}	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.start_list);
 					
+        startButton = (Button)findViewById(R.id.start_button);
+        startButton.setOnClickListener(new View.OnClickListener()
+        {
+        	public void onClick(View v) 
+        	{ 
+        		startButtonClicked();
+        	}
+        });       
+        
+        reloadButton = (Button)findViewById(R.id.reload_button);
+        reloadButton.setOnClickListener(new View.OnClickListener()
+        {
+        	public void onClick(View v) 
+        	{ 
+        		reloadButtonClicked();
+        	}
+        });        
+        
 		phaseName = (TextView)findViewById(R.id.phasenameLabel);
 		eventName = (TextView)findViewById(R.id.eventnameLabel);
 		mExpandableList = (ExpandableListView)findViewById(R.id.phaseDefinitionList);
@@ -139,8 +183,13 @@ public class GetStartList extends Activity
 			        	Round currentRound = globalMatchData.getRound(i);
 			            //for each "i" create a new Parent object to set the title and the children
 			            Parent parent = new Parent();
+			            
 			            parent.setTitle(currentRound.name());
-			             
+			            parent.setRoundId(currentRound.getRoundId());
+			            parent.setBoulderPrefix(currentRound.boulderPrefix());
+			            parent.setNrOfBoulders(Integer.toString(currentRound.getNrOfBoulders()));
+			            parent.setRound(currentRound);
+			            			             
 			            ArrayList<HashMap<String, String>> arrayChildren = new ArrayList<HashMap<String, String>>();
 			            
 			            int numberOfClimbers = currentRound.getSize();
@@ -152,8 +201,7 @@ public class GetStartList extends Activity
 							map.put(TAG_FIRSTNAME, currentClimber.firstName());
 							map.put(TAG_LASTNAME, currentClimber.lastName());
 							map.put(TAG_POLEPOSITION, Integer.toString(currentClimber.getPolePosition()));			            	
-							arrayChildren.add(map);
-			                //arrayChildren.add(currentClimber.lastName());
+							arrayChildren.add(map);			                
 			            }
 			            parent.setArrayChildren(arrayChildren);
 			 
@@ -229,7 +277,10 @@ public class GetStartList extends Activity
 					int roundid = round.getInt(TAG_ROUNDID);
 					String roundname = round.getString(TAG_ROUNDNAME);
 					int roundsequence = round.getInt(TAG_ROUNDSEQUENCE);
-					Round localRound = new Round(roundsequence, roundname, roundid);
+					int nrofboulders = round.getInt(TAG_NROFBOULDERS);
+					String boulderprefix = round.getString(TAG_BOULDERPREFIX);
+
+					Round localRound = new Round(roundsequence, roundname, roundid, nrofboulders, boulderprefix);
 					
 					JSONArray enrollmentList = round.getJSONArray(TAG_ROUNDENROLLMENTS);
 					

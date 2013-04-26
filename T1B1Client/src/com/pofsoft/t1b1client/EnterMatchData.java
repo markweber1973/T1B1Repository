@@ -10,6 +10,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -44,8 +45,8 @@ public class EnterMatchData extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		//View v = findViewById(R.layout.activity_enter_match_data);
+//		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//		View v = findViewById(R.layout.activity_enter_match_data);
 		//v.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE); 
 		setContentView(R.layout.activity_enter_match_data);	
 		getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);

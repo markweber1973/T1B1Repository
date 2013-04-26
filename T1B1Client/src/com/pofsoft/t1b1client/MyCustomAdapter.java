@@ -1,28 +1,27 @@
 package com.pofsoft.t1b1client;
 import android.content.Context;
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.RadioGroup.OnCheckedChangeListener;
  
 import java.util.ArrayList;
  
-/**
- * Created with IntelliJ IDEA.
- * User: zizi
- * Date: 8/10/12
- * Time: 12:05 PM
- * To change this template use File | Settings | File Templates.
- */
 public class MyCustomAdapter extends BaseExpandableListAdapter {
  
 	private static final String TAG_STARTNUMBER = "startnumber";
 	private static final String TAG_POLEPOSITION = "poleposition";
 	private static final String TAG_FIRSTNAME = "firstname";
 	private static final String TAG_LASTNAME = "lastname";
-	
+		
     private LayoutInflater inflater;
     private ArrayList<Parent> mParent;
  
@@ -31,6 +30,10 @@ public class MyCustomAdapter extends BaseExpandableListAdapter {
         inflater = LayoutInflater.from(context);
     }
  
+    public Parent getParent(int i)
+    {
+    	return (Parent)mParent.get(i);
+    }
  
     @Override
     //counts the number of group/parent items so the list knows how many times calls getGroupView() method
@@ -79,11 +82,17 @@ public class MyCustomAdapter extends BaseExpandableListAdapter {
             view = inflater.inflate(R.layout.list_item_parent, viewGroup,false);
         }
  
-        TextView textView = (TextView) view.findViewById(R.id.list_item_text_view);
-        //"i" is the position of the parent/group in the list
-        textView.setText(getGroup(i).toString());
+        TextView textView = (TextView) view.findViewById(R.id.roundname);
+        textView.setText(mParent.get(i).getTitle());
  
-        //return the entire view
+        textView = (TextView) view.findViewById(R.id.boulderprefix);
+        textView.setText(mParent.get(i).getBoulderPrefix());  
+        
+        textView = (TextView) view.findViewById(R.id.nrofboulders);
+        textView.setText(mParent.get(i).getNrOfBoulders()); 
+  		 
+        mParent.get(i).setCheckBox((CheckBox) view.findViewById(R.id.enrollcheckbox));
+             
         return view;
     }
  

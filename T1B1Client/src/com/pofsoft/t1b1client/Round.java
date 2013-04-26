@@ -8,17 +8,34 @@ public class Round implements Comparable {
 	private int roundId;
 	private int sequence;
 	private String name;
+	private String boulderprefix;
+	private int nrofboulders;
+	private boolean enabled;
+	
 	int activeBoulderId;
 	
-	public Round (int sequence, String name, int roundId)
+	public Round (int sequence, String name, int roundId, int nrofboulders, String boulderprefix)
 	{
 		climbersInRound = new PolePositionedClimberList();
 		this.sequence = sequence;
 		this.name = name;		
 		this.roundId = roundId;
+		this.nrofboulders = nrofboulders;
+		this.boulderprefix = boulderprefix;
 		activeBoulderId = 0;
+		enabled = false;
 	}
 	
+	
+	public void setEnabled(boolean enabled)
+	{
+		this.enabled = enabled;
+	}
+	
+	public boolean getEnabled()
+	{
+		return enabled;
+	}
 	
 	public void setBoulderId(int boulderId)
 	{
@@ -35,6 +52,11 @@ public class Round implements Comparable {
 		return name;
 	}
 
+	public String boulderPrefix()
+	{
+		return boulderprefix;
+	}	
+	
 	public int getSequence()
 	{
 		return sequence;
@@ -43,6 +65,11 @@ public class Round implements Comparable {
 	public int getRoundId()
 	{
 		return roundId;
+	}	
+	
+	public int getNrOfBoulders()
+	{
+		return nrofboulders;
 	}	
 	
 	public int getSize()
