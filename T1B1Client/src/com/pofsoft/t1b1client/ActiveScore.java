@@ -1,21 +1,34 @@
 package com.pofsoft.t1b1client;
 
-public class ActiveScore {
+@SuppressWarnings("rawtypes")
+public class ActiveScore implements Comparable {
 
 	private Score score;
 	private ClimberActionStack climberActionStack;
 	private int nrOfAttempts;
 	private boolean finished;
 	private boolean started;
+	private int boulderId;
 	
 	public ActiveScore()
 	{
+		boulderId = 0;
 		nrOfAttempts = 0;
 		score = new Score();
 		finished = false;
 		climberActionStack = new ClimberActionStack();
 	}
 
+	public void setBoulderId(int boulderId)
+	{
+		this.boulderId = boulderId;
+	}
+	
+    public int getBoulderId()
+    {
+    	return boulderId;
+    }
+	
 	public void setFinished()
 	{
 		finished = true;
@@ -134,9 +147,6 @@ public class ActiveScore {
 		}
 	}
 	
-	
-	// Private stuff starts here.
-	
 	private void resetBonus()
 	{
 		score.setAttemptsToBonus(0);
@@ -180,5 +190,22 @@ public class ActiveScore {
 		finished = false;
 	}
 	
-	
+	@Override
+	public int compareTo(Object compareTarget)
+	{
+		int foreignBoulderId = ((ActiveScore)compareTarget).getBoulderId();
+		
+		if (boulderId < foreignBoulderId)
+		{
+			return (-1);
+		}
+		else if (boulderId == foreignBoulderId)
+		{
+			return (0);
+		}
+		else
+		{
+			return 1;
+		}			
+	}	
 }

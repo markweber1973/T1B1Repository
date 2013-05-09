@@ -8,11 +8,15 @@ public class MatchData extends Application {
 	private RoundList roundList = null; 
 	int eventId;
 	int phaseId;
+	int boulderId;
 	String eventName;
 	String phaseName;
+	boolean boulderInfoDefinedOnServer;
 	
 	public MatchData(int eventId, int phaseId)
 	{
+		boulderInfoDefinedOnServer = false;
+		boulderId = 0;
 		this.eventId = eventId;
 		this.phaseId = phaseId;
 		roundList = new RoundList();
@@ -23,6 +27,27 @@ public class MatchData extends Application {
 
 	}
 		
+	public void setBoulderInfoDefinedOnServer()
+	{
+		boulderInfoDefinedOnServer = true;
+	}
+
+	public void resetBoulderInfoDefinedOnServer()
+	{
+		boulderInfoDefinedOnServer = false;
+	}	
+	
+	public void setBoulderId(int boulderId)
+	{
+		this.boulderId = boulderId;
+	}
+	
+	public int getBoulderId()
+	{
+		return boulderId;
+	}
+	
+	
 	public void setEventId(int eventId)
 	{
 		this.eventId = eventId;
@@ -67,6 +92,11 @@ public class MatchData extends Application {
 	{
 		roundList.add(round);
 	}
+	
+	public void removeRound(Round round)
+	{
+		roundList.remove(round);
+	}	
 	
 	public Round getFirst()
 	{

@@ -26,6 +26,11 @@ public class Parent {
     	this.round = round;
     }
     
+    public Round getRound()
+    {
+    	return round;
+    }
+    
     public boolean isSelected()
     {
     	return mCheckBox.isChecked();

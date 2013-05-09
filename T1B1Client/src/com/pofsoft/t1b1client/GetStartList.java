@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
@@ -77,12 +78,16 @@ public class GetStartList extends Activity
 		
 		for (int index = 0; index < mExpandableList.getExpandableListAdapter().getGroupCount(); index++)
 		{
-			boolean test;
 			myAdapter = (MyCustomAdapter)mExpandableList.getExpandableListAdapter();
-			myParent = myAdapter.getParent(index);	
-			test = myParent.isSelected();
-		}
-		myAdapter = (MyCustomAdapter)mExpandableList.getExpandableListAdapter();		
+			myParent = myAdapter.getParent(index);			
+			
+			if (myParent.isSelected() == false)
+			{
+				globalMatchData.removeRound(myParent.getRound());
+			}						
+		}		
+   		Intent intent = new Intent(this, EnterMatchData.class); 
+		startActivity(intent);
 	}
 	
 	private void reloadButtonClicked()
@@ -295,7 +300,7 @@ public class GetStartList extends Activity
 						String lastName = enrollment.getString(TAG_LASTNAME);
 						String firstName = enrollment.getString(TAG_FIRSTNAME);
 						Climber localClimber = new Climber(startnumber, firstName, lastName);
-						PolePositionedClimber localPolePositionedClimer = new PolePositionedClimber(localClimber, poleposition);
+						PolePositionedClimber localPolePositionedClimer = new PolePositionedClimber(localClimber, poleposition, nrofboulders);
 						localRound.addPolePositionedClimber(localPolePositionedClimer);
 					}	
 					globalMatchData.addRound(localRound);

@@ -23,6 +23,8 @@ public class EnterMatchData extends Activity {
 	EditText txtCreatedAt;
 	private MatchData globalMatchData;
 	
+	private int currentBoulderId;
+	
 	private TextView firstNameLastName;
 	private TextView startNumber;
 	private TextView currentScore;
@@ -48,13 +50,12 @@ public class EnterMatchData extends Activity {
 //		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 //		View v = findViewById(R.layout.activity_enter_match_data);
 		//v.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE); 
+		currentBoulderId = 0;
 		setContentView(R.layout.activity_enter_match_data);	
 		getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		producerQueue = new ArrayBlockingQueue<ScoreProducerQueueEntry>(1000);
 		scoreConsumer = new ScoreConsumer(producerQueue);
-		new Thread(scoreConsumer).start();
-		
-		//new SaveProductDetails().execute();
+		new Thread(scoreConsumer).start();		
 		
 		firstNameLastName = (TextView)findViewById(R.id.firstNameLastNameTextView);
 		startNumber = (TextView)findViewById(R.id.startNumberTextView);
@@ -98,8 +99,14 @@ public class EnterMatchData extends Activity {
         {
         	public void onClick(View v) 
         	{ 
-        		currentClimber.startedAttempt();
-        		updateUI();
+        		try {
+					currentClimber.startedAttempt(currentBoulderId);
+					updateUI();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        		
         		updateScoreDataOnServer();
         	}
         });
@@ -110,8 +117,13 @@ public class EnterMatchData extends Activity {
         	public void onClick(View v) 
         	{ 
 
-        		currentClimber.reachedBonus();
-        		updateUI();
+        		try {
+            		currentClimber.reachedBonus(currentBoulderId);
+					updateUI();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
         		updateScoreDataOnServer();
         	}
         });
@@ -122,8 +134,14 @@ public class EnterMatchData extends Activity {
         	public void onClick(View v) 
         	{ 
 
-        		currentClimber.reachedTop();
-        		updateUI();
+        		try {
+					currentClimber.reachedTop(currentBoulderId);
+	        		updateUI();
+
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
         		updateScoreDataOnServer();    	
         	}
         });
@@ -134,8 +152,14 @@ public class EnterMatchData extends Activity {
         	public void onClick(View v) 
         	{ 
 
-        		currentClimber.undo();      		
-        		updateUI();
+        		try {
+					currentClimber.undo(currentBoulderId);
+	        		updateUI();
+
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}      		
         		updateScoreDataOnServer();
         	}
         });		
@@ -146,34 +170,45 @@ public class EnterMatchData extends Activity {
         	public void onClick(View v) 
         	{ 
 
-        		currentClimber.finished();
-        		updateUI();
+        		try {
+					currentClimber.finished(currentBoulderId);
+	        		updateUI();
+
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
         		updateScoreDataOnServer();
         	}
         });	
-		updateUI();
+		try {
+			updateUI();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	private void updateUI()
+	private void updateUI() throws Exception
 	{	
 		firstNameLastName.setText(currentClimber.firstName() + " " + currentClimber.lastName());
 		startNumber.setText(String.valueOf(currentClimber.getStartNumber()));
-		attemptsDone.setText(String.valueOf(currentClimber.attempts()));					
+		attemptsDone.setText(String.valueOf(currentClimber.attempts(currentBoulderId)));					
 		firstNameLastName.setText(currentClimber.firstName() + " " + currentClimber.lastName());
 
 		String score = "T";
-		if (currentClimber.topReached())
+		if (currentClimber.topReached(currentBoulderId))
 		{
-			score+= currentClimber.attemptsToTop();
+			score+= currentClimber.attemptsToTop(currentBoulderId);
 		}
 		else
 		{
 			score+="-";
 		}
 		score+="B";
-		if (currentClimber.bonusReached())
+		if (currentClimber.bonusReached(currentBoulderId))
 		{
-			score+= currentClimber.attemptsToBonus();
+			score+= currentClimber.attemptsToBonus(currentBoulderId);
 		}
 		else
 		{
@@ -183,10 +218,10 @@ public class EnterMatchData extends Activity {
 		
 		nextClimberButton.setEnabled(globalMatchData.hasNext());
 		previousClimberButton.setEnabled(globalMatchData.hasPrevious());
-		finishedButton.setEnabled(!currentClimber.isFinished());
-		topButton.setEnabled(!currentClimber.topReached() && !currentClimber.isFinished());
-		bonusButton.setEnabled(!currentClimber.bonusReached() && !currentClimber.isFinished());
-		attemptButton.setEnabled(!currentClimber.isFinished() && !currentClimber.topReached());
+		finishedButton.setEnabled(!currentClimber.isFinished(currentBoulderId));
+		topButton.setEnabled(!currentClimber.topReached(currentBoulderId) && !currentClimber.isFinished(currentBoulderId));
+		bonusButton.setEnabled(!currentClimber.bonusReached(currentBoulderId) && !currentClimber.isFinished(currentBoulderId));
+		attemptButton.setEnabled(!currentClimber.isFinished(currentBoulderId) && !currentClimber.topReached(currentBoulderId));
 //	    currentBoulder.setText(String.valueOf(globalMatchData.getBoulderId()));
 	}
 
@@ -231,7 +266,12 @@ public class EnterMatchData extends Activity {
         @Override
         public void onClick(DialogInterface dialog, int which) {
  //       	currentClimber = globalMatchData.getNext();
-		    updateUI();  
+		    try {
+				updateUI();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  
         }
 
     })
@@ -250,7 +290,12 @@ public class EnterMatchData extends Activity {
         @Override
         public void onClick(DialogInterface dialog, int which) {
 //        	currentClimber = globalMatchData.getPrevious();
-		    updateUI();  
+		    try {
+				updateUI();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  
         }
 
     })

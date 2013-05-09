@@ -27,7 +27,7 @@ public class SelectBoulder extends Activity
         numberOfBouldersGroup = (RadioGroup) findViewById(R.id.bouldersRadioGroup);
         globalMatchData = ((MatchData)getApplicationContext());
 
-//        activeBoulder = globalMatchData.getBoulderId();
+        activeBoulder = globalMatchData.getBoulderId();
         numberOfBouldersGroup.check(activeBoulder);
         
         okButton = (Button) findViewById(R.id.okButton);       
@@ -35,7 +35,15 @@ public class SelectBoulder extends Activity
         {
         	public void onClick(View v) 
         	{ 
-        		setBoulderId(activeBoulder);
+        		if (activeBoulder == 0)
+        		{
+        			globalMatchData.setBoulderInfoDefinedOnServer();       			
+        		}
+        		else
+        		{
+        			globalMatchData.resetBoulderInfoDefinedOnServer();
+        		}
+        		globalMatchData.setBoulderId(activeBoulder);
         		finish();
         	}
         });
@@ -48,7 +56,7 @@ public class SelectBoulder extends Activity
         		finish();
         	}
         });
-        
+                
         switch(getBoulderId())
         {
         	case 1:
@@ -63,6 +71,9 @@ public class SelectBoulder extends Activity
         	case 4:
         		numberOfBouldersGroup.check(R.id.fourBoulders);
         		break;  
+        	case 0:
+        		numberOfBouldersGroup.check(R.id.allBoulders);
+        		break;		
        		
         }
    
@@ -85,6 +96,9 @@ public class SelectBoulder extends Activity
 					case R.id.fourBoulders:
 						activeBoulder = 4;
 						break;	
+					case R.id.allBoulders:
+						activeBoulder = 0;
+						break;							
 					default:
 						break;
 				};
@@ -92,15 +106,10 @@ public class SelectBoulder extends Activity
         });
     };
     
-    private void setBoulderId(int boulderId)
-    {
- //       globalMatchData.setBoulderId(boulderId);      
-    }
+
     
     private int getBoulderId()
-    { 
-    	return 1;
-    	
-       // return (globalMatchData.getBoulderId());      
+    {     	
+       return (globalMatchData.getBoulderId());      
     }
 };

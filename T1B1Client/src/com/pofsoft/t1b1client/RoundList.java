@@ -18,7 +18,13 @@ public class RoundList {
 		roundList.add(round);
 		Collections.sort(roundList, new RoundComparator());
 	}
-		
+
+	public void remove(Round round)
+	{
+		roundList.remove(round);
+		Collections.sort(roundList, new RoundComparator());
+	}	
+	
 	public Vector<Round> getList()
 	{
 		return roundList;
