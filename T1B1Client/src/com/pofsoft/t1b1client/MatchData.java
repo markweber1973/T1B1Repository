@@ -2,6 +2,11 @@ package com.pofsoft.t1b1client;
 
 
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Vector;
+
 import android.app.Application;
 
 public class MatchData extends Application {	
@@ -12,6 +17,9 @@ public class MatchData extends Application {
 	String eventName;
 	String phaseName;
 	boolean boulderInfoDefinedOnServer;
+	List<ScoreSlot> scoreSlots;
+	ListIterator<ScoreSlot> scoreSlotIterator;
+	
 	
 	public MatchData(int eventId, int phaseId)
 	{
@@ -20,6 +28,7 @@ public class MatchData extends Application {
 		this.eventId = eventId;
 		this.phaseId = phaseId;
 		roundList = new RoundList();
+		scoreSlotIterator = scoreSlots.listIterator();
 	}
 	
 	public MatchData()
@@ -152,5 +161,37 @@ public class MatchData extends Application {
 	{
 		return roundList.getRound(index);
 	}
+	
+	public int getNumberOfScoreSlots()
+	{
+		return scoreSlots.size();
+	}
+	
+	public ScoreSlot getFirstScoreSlot()
+	{
+		return scoreSlots.firstElement();
+	}
+	
+	public boolean hasNextScoreSlot()
+	{
+		return scoreSlotIterator.hasNext();
+	}	
+	
+	public ScoreSlot getNextScoreSlot()
+	{
+		return scoreSlotIterator.next();
+	}		
+	
+	public ScoreSlot getPreviousScoreSlot()
+	{
+		return scoreSlotIterator.
+	}	
+	
+	public ScoreSlot getScoreSlot(int index)
+	{
+		return scoreSlots.elementAt(index);
+	}
+	
+	
 }
 	

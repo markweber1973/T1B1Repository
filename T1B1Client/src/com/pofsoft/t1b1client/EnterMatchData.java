@@ -43,6 +43,10 @@ public class EnterMatchData extends Activity {
 	private BlockingQueue<ScoreProducerQueueEntry> producerQueue = null;
 	private ScoreConsumer scoreConsumer;
 	
+	private ScoreSlot currentScoreSlot;
+	private int currentScoreSlotIndex;
+	private int nrOfScoreSlots;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,9 @@ public class EnterMatchData extends Activity {
 //		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 //		View v = findViewById(R.layout.activity_enter_match_data);
 		//v.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE); 
+		currentScoreSlotIndex = 0;
+		currentScoreSlot = globalMatchData.getScoreSlot(currentScoreSlotIndex);
+		
 		currentBoulderId = 0;
 		setContentView(R.layout.activity_enter_match_data);	
 		getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -65,6 +72,7 @@ public class EnterMatchData extends Activity {
 		
 		globalMatchData = ((MatchData)getApplicationContext());
 //		currentClimber = globalMatchData.getFirst();
+
 		
 		nextClimberButton = (Button) findViewById(R.id.nextClimberButton); 
 		nextClimberButton.setOnClickListener(new View.OnClickListener()
@@ -289,7 +297,8 @@ public class EnterMatchData extends Activity {
     {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-//        	currentClimber = globalMatchData.getPrevious();
+        	currentScoreSlotIndex--;
+        	currentScoreSlot = globalMatchData.getScoreSlot(currentScoreSlotIndex);
 		    try {
 				updateUI();
 			} catch (Exception e) {

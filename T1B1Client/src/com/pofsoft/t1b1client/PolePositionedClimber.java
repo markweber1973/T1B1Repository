@@ -1,8 +1,6 @@
 package com.pofsoft.t1b1client;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Vector;
 
 @SuppressWarnings("rawtypes")
 public class PolePositionedClimber implements Comparable
@@ -10,6 +8,7 @@ public class PolePositionedClimber implements Comparable
 	private int polePosition;
 	private Climber climber;
 	private ArrayList<ActiveScore> activeScore;
+	private int nrOfBoulders;
 	
 	public PolePositionedClimber(Climber theClimber, int polePosition, int nrOfBoulders)
 	{
@@ -22,15 +21,9 @@ public class PolePositionedClimber implements Comparable
 		{
 			activeScore.add(index, new ActiveScore());		
 		}
+		this.nrOfBoulders = nrOfBoulders;
 	}
-	
-	public PolePositionedClimber(int startNumber, int polePosition, String firstName, String lastName)		
-	{
-		this.climber = new Climber(startNumber, firstName, lastName);
-		this.polePosition = polePosition;
-		activeScore = new ArrayList<ActiveScore>();
-	}
-		
+			
 	private ActiveScore getActiveScoreForBoulder(int boulderId) throws Exception
 	{
 		System.out.print("getActiveScoreForBoulder=" + boulderId);
@@ -153,10 +146,10 @@ public class PolePositionedClimber implements Comparable
 	}
 	
 	private void throwExceptionWhenIllegalBoulderId(int boulderId) throws Exception
-	{
-		if (boulderId <= 0)
+	{ 
+		if ((boulderId <= 0) || (boulderId > nrOfBoulders))
 		{
-			throw new Exception("Boulder Id <= 0 is invalid");
+			throw new Exception("Boulder Id <= 0 or > " + nrOfBoulders + " is invalid");
 		}		
 	}
 }
