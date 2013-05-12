@@ -1,197 +1,139 @@
+
 package com.pofsoft.t1b1client;
-
-
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Vector;
-
 import android.app.Application;
 
 public class MatchData extends Application {	
-	private RoundList roundList = null; 
-	int eventId;
-	int phaseId;
-	int boulderId;
-	String eventName;
-	String phaseName;
-	boolean boulderInfoDefinedOnServer;
-	List<ScoreSlot> scoreSlots;
-	ListIterator<ScoreSlot> scoreSlotIterator;
-	
-	
+	LiveData liveData;
+
 	public MatchData(int eventId, int phaseId)
 	{
-		boulderInfoDefinedOnServer = false;
-		boulderId = 0;
-		this.eventId = eventId;
-		this.phaseId = phaseId;
-		roundList = new RoundList();
-		scoreSlotIterator = scoreSlots.listIterator();
+		liveData = new LiveData(eventId, phaseId);
 	}
-	
+			
 	public MatchData()
 	{
-
+		liveData = new LiveData();
 	}
-		
+	
+	public void fillScoreSlots()
+	{
+        liveData.fillScoreSlots();
+	}
+	
 	public void setBoulderInfoDefinedOnServer()
 	{
-		boulderInfoDefinedOnServer = true;
+		liveData.setBoulderInfoDefinedOnServer();
 	}
 
 	public void resetBoulderInfoDefinedOnServer()
 	{
-		boulderInfoDefinedOnServer = false;
+		liveData.resetBoulderInfoDefinedOnServer();
 	}	
 	
 	public void setBoulderId(int boulderId)
 	{
-		this.boulderId = boulderId;
+		liveData.setBoulderId(boulderId);
 	}
 	
 	public int getBoulderId()
 	{
-		return boulderId;
+		return liveData.getBoulderId();
 	}
-	
-	
+		
 	public void setEventId(int eventId)
 	{
-		this.eventId = eventId;
+		liveData.setEventId(eventId);
 	}
 
 	public void setPhaseId(int phaseId)
 	{
-		this.phaseId = phaseId;
+		liveData.setPhaseId(phaseId);
 	}	
 
 	public void setEventName(String name)
 	{
-		this.eventName = name;
+		liveData.setEventName(name);
 	}
 
 	public void setPhaseName(String name)
 	{
-		this.phaseName = name;
+		liveData.setPhaseName(name);
 	}		
 	
 	public int getEventId()
 	{
-		return eventId;
+		return liveData.getEventId();
 	}	
 		
 	public int getPhaseId()
 	{
-		return phaseId;
+		return liveData.getPhaseId();
 	}		
-
-	public String getEventName()
-	{
-		return eventName;
-	}	
 		
 	public String getPhaseName()
 	{
-		return phaseName;
+		return liveData.getPhaseName();
 	}		
 	
 	public void addRound(Round round)
 	{
-		roundList.add(round);
+		liveData.addRound(round);
 	}
 	
 	public void removeRound(Round round)
 	{
-		roundList.remove(round);
+		liveData.removeRound(round);
 	}	
-	
-	public Round getFirst()
-	{
-		return (roundList.getFirst());
-	}
-	
-	public Round getPrevious()
-	{
-		return (roundList.getPrevious());
-	}
-	
-	public Round getNext()
-	{
-		return (roundList.getNext());
-	}
-	
-	public boolean hasNext()
-	{
-		return (roundList.hasNext());
-	}
-	
+			
 	public boolean isEmpty()
 	{
-		return (roundList.isEmpty());
-	}
-	
-	public boolean hasPrevious()
-	{
-		return (roundList.hasPrevious());
+		return (liveData.isEmpty());
 	}
 	
 	public void sort()
 	{
-		roundList.sort();
+		liveData.sort();
 	}
 	
 	public void clear()
 	{
-		roundList = new RoundList();
+		liveData.clear();
 	}
 	
 	public void reset()
 	{
-		roundList.reset();
+		liveData.reset();
 	}
 	
-	public int getSize()
+	public boolean hasNextRound()
 	{
-		return roundList.getSize();
-	}
-
-	public Round getRound(int index)
-	{
-		return roundList.getRound(index);
+		return liveData.hasNextRound();
 	}
 	
-	public int getNumberOfScoreSlots()
+	public Round getNextRound()
 	{
-		return scoreSlots.size();
+		return liveData.getNextRound();
 	}
-	
-	public ScoreSlot getFirstScoreSlot()
-	{
-		return scoreSlots.firstElement();
-	}
-	
+		
 	public boolean hasNextScoreSlot()
 	{
-		return scoreSlotIterator.hasNext();
+		return liveData.hasNextScoreSlot();
+	}	
+	
+	public boolean hasPreviousScoreSlot()
+	{
+		return liveData.hasPreviousScoreSlot();
 	}	
 	
 	public ScoreSlot getNextScoreSlot()
 	{
-		return scoreSlotIterator.next();
+		return liveData.getNextScoreSlot();
 	}		
 	
 	public ScoreSlot getPreviousScoreSlot()
 	{
-		return scoreSlotIterator.
-	}	
-	
-	public ScoreSlot getScoreSlot(int index)
-	{
-		return scoreSlots.elementAt(index);
-	}
-	
+		return liveData.getPreviousScoreSlot();
+	}			
 	
 }
 	

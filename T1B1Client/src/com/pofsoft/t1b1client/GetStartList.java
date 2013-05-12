@@ -1,6 +1,7 @@
 package com.pofsoft.t1b1client;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -75,24 +77,40 @@ public class GetStartList extends Activity
 	{
 		MyCustomAdapter myAdapter;
 		Parent myParent;
+		boolean noRoundSelected = true;
 		
 		for (int index = 0; index < mExpandableList.getExpandableListAdapter().getGroupCount(); index++)
 		{
 			myAdapter = (MyCustomAdapter)mExpandableList.getExpandableListAdapter();
 			myParent = myAdapter.getParent(index);			
 			
-			if (myParent.isSelected() == false)
+			if (myParent.isSelected())
 			{
-				globalMatchData.removeRound(myParent.getRound());
-			}						
+				noRoundSelected = false;
+				myParent.getRound().setEnabled();
+			}			
+			else
+			{
+				myParent.getRound().setDisabled();
+			}
 		}		
-   		Intent intent = new Intent(this, EnterMatchData.class); 
-		startActivity(intent);
+		
+		if (noRoundSelected)
+		{
+			showNoRoundSelectedMessage();
+		}
+		else
+		{
+			globalMatchData.fillScoreSlots();
+	   		Intent intent = new Intent(this, EnterMatchData.class); 
+			startActivity(intent);
+		}
 	}
 	
 	private void reloadButtonClicked()
 	{
-		
+		new LoadStartList().execute();		
+		globalMatchData = ((MatchData)getApplicationContext());			
 	}	
 	
 	@Override
@@ -180,26 +198,26 @@ public class GetStartList extends Activity
 					 * */
 			        ArrayList<Parent> arrayParents = new ArrayList<Parent>();
 			        globalMatchData.reset();
-			        
+			        			        
+			        while (globalMatchData.hasNextRound())
+			        {
+			        	Round currentRound = globalMatchData.getNextRound();
+			            currentRound.reset();
 
-			        int numberOfRounds = globalMatchData.getSize();
-			        //here we set the parents and the children
-			        for (int i = 0; i < numberOfRounds; i++){
-			        	Round currentRound = globalMatchData.getRound(i);
 			            //for each "i" create a new Parent object to set the title and the children
 			            Parent parent = new Parent();
 			            
-			            parent.setTitle(currentRound.name());
+			            parent.setTitle(currentRound.getName());
 			            parent.setRoundId(currentRound.getRoundId());
-			            parent.setBoulderPrefix(currentRound.boulderPrefix());
+			            parent.setBoulderPrefix(currentRound.getBoulderPrefix());
 			            parent.setNrOfBoulders(Integer.toString(currentRound.getNrOfBoulders()));
 			            parent.setRound(currentRound);
 			            			             
 			            ArrayList<HashMap<String, String>> arrayChildren = new ArrayList<HashMap<String, String>>();
 			            
-			            int numberOfClimbers = currentRound.getSize();
-			            for (int j = 0; j < numberOfClimbers; j++) {
-			            	PolePositionedClimber currentClimber = currentRound.getPolePositionedClimber(j);
+			            while (currentRound.hasNextClimber())
+			            {
+			            	PolePositionedClimber currentClimber = currentRound.getNextClimber();
 			            	
 							HashMap<String, String> map = new HashMap<String, String>();
 							map.put(TAG_STARTNUMBER, Integer.toString(currentClimber.getStartNumber()));
@@ -316,6 +334,24 @@ public class GetStartList extends Activity
 		}					
 		
 	}
+	
+    
+    private void showNoRoundSelectedMessage()
+    {
+        new AlertDialog.Builder(this)
+        .setIcon(android.R.drawable.ic_dialog_info)
+        .setTitle("Can not start entering data")
+        .setMessage("Enroll at least one round")
+        .setPositiveButton("Ok", new DialogInterface.OnClickListener()
+    {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+
+        }
+
+    })
+    .show();   	
+    }
 	
 
 }

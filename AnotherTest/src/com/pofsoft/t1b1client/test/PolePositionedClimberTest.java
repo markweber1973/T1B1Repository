@@ -90,7 +90,7 @@ public class PolePositionedClimberTest {
 	}
 	
 	@Test
-	public void testAddScoreToVirginClimber() 
+	public void testVirginClimberAddAttempts() 
 	{		
     	Climber climber = new Climber(1, "Mark", "Weber");
     	PolePositionedClimber polePosClimber = new PolePositionedClimber(climber, 1, 5);	
@@ -106,4 +106,259 @@ public class PolePositionedClimberTest {
         assertEquals(1, attempts);
 	}
  
+	@Test
+	public void testVirginClimberTopped() 
+	{		
+    	Climber climber = new Climber(1, "Mark", "Weber");
+    	PolePositionedClimber polePosClimber = new PolePositionedClimber(climber, 1, 5);	
+    	boolean topped = false;
+    	boolean bonussed = false;
+    	boolean finished = false;
+    	int attempts = 0;
+    	
+		try {
+			polePosClimber.reachedTop(1);
+			topped = polePosClimber.topReached(1);
+			bonussed = polePosClimber.bonusReached(1);
+			finished = polePosClimber.isFinished(1);
+			attempts = polePosClimber.attempts(1);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();	
+			fail("Test failed");
+			
+		}  
+        assertEquals(true, topped);
+        assertEquals(true, bonussed);
+        assertEquals(true, finished);
+        assertEquals(1, attempts);   
+        
+        try {
+			polePosClimber.undo(1);
+			topped = polePosClimber.topReached(1);
+			bonussed = polePosClimber.bonusReached(1);
+			finished = polePosClimber.isFinished(1);
+			attempts = polePosClimber.attempts(1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail("Test failed");
+		}
+        
+        assertEquals(true, topped);
+        assertEquals(true, bonussed);
+        assertEquals(false, finished);
+        assertEquals(1, attempts); 
+        
+        try {
+			polePosClimber.undo(1);
+			topped = polePosClimber.topReached(1);
+			bonussed = polePosClimber.bonusReached(1);
+			finished = polePosClimber.isFinished(1);
+			attempts = polePosClimber.attempts(1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail("Test failed");
+		}
+        
+        assertEquals(false, topped);
+        assertEquals(true, bonussed);
+        assertEquals(false, finished);
+        assertEquals(1, attempts); 
+        
+        try {
+			polePosClimber.undo(1);
+			topped = polePosClimber.topReached(1);
+			bonussed = polePosClimber.bonusReached(1);
+			finished = polePosClimber.isFinished(1);
+			attempts = polePosClimber.attempts(1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail("Test failed");
+		}
+        
+        assertEquals(false, topped);
+        assertEquals(false, bonussed);
+        assertEquals(false, finished);
+        assertEquals(1, attempts); 
+        
+        try {
+			polePosClimber.undo(1);
+			topped = polePosClimber.topReached(1);
+			bonussed = polePosClimber.bonusReached(1);
+			finished = polePosClimber.isFinished(1);
+			attempts = polePosClimber.attempts(1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail("Test failed");
+		}
+        
+        assertEquals(false, topped);
+        assertEquals(false, bonussed);
+        assertEquals(false, finished);
+        assertEquals(0, attempts); 
+	}	
+
+	@Test
+	public void testVirginClimberBonussed() 
+	{		
+    	Climber climber = new Climber(1, "Mark", "Weber");
+    	PolePositionedClimber polePosClimber = new PolePositionedClimber(climber, 1, 5);	
+    	boolean topped = false;
+    	boolean bonussed = false;
+    	boolean finished = false;
+    	int attempts = 0;
+    	
+		try {
+			polePosClimber.reachedBonus(1);
+			topped = polePosClimber.topReached(1);
+			bonussed = polePosClimber.bonusReached(1);
+			finished = polePosClimber.isFinished(1);
+			attempts = polePosClimber.attempts(1);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();	
+			fail("Test failed");
+			
+		}  
+        assertEquals(false, topped);
+        assertEquals(true, bonussed);
+        assertEquals(false, finished);
+        assertEquals(1, attempts);   
+        
+        try {
+			polePosClimber.undo(1);
+			topped = polePosClimber.topReached(1);
+			bonussed = polePosClimber.bonusReached(1);
+			finished = polePosClimber.isFinished(1);
+			attempts = polePosClimber.attempts(1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail("Test failed");
+		}
+        
+        assertEquals(false, topped);
+        assertEquals(false, bonussed);
+        assertEquals(false, finished);
+        assertEquals(1, attempts); 
+        
+        try {
+			polePosClimber.undo(1);
+			topped = polePosClimber.topReached(1);
+			bonussed = polePosClimber.bonusReached(1);
+			finished = polePosClimber.isFinished(1);
+			attempts = polePosClimber.attempts(1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail("Test failed");
+		}
+        
+        assertEquals(false, topped);
+        assertEquals(false, bonussed);
+        assertEquals(false, finished);
+        assertEquals(0, attempts); 
+	}	
+	
+	@Test
+	public void testVirginClimberAttemted() 
+	{		
+    	Climber climber = new Climber(1, "Mark", "Weber");
+    	PolePositionedClimber polePosClimber = new PolePositionedClimber(climber, 1, 5);	
+    	boolean topped = false;
+    	boolean bonussed = false;
+    	boolean finished = false;
+    	int attempts = 0;
+    	
+		try {
+			polePosClimber.startedAttempt(1);
+			topped = polePosClimber.topReached(1);
+			bonussed = polePosClimber.bonusReached(1);
+			finished = polePosClimber.isFinished(1);
+			attempts = polePosClimber.attempts(1);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();	
+			fail("Test failed");
+			
+		}  
+        assertEquals(false, topped);
+        assertEquals(false, bonussed);
+        assertEquals(false, finished);
+        assertEquals(1, attempts);   
+        
+        try {
+			polePosClimber.undo(1);
+			topped = polePosClimber.topReached(1);
+			bonussed = polePosClimber.bonusReached(1);
+			finished = polePosClimber.isFinished(1);
+			attempts = polePosClimber.attempts(1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail("Test failed");
+		}
+        
+        assertEquals(false, topped);
+        assertEquals(false, bonussed);
+        assertEquals(false, finished);
+        assertEquals(0, attempts); 
+ 
+	}		
+	
+	@Test
+	public void testVirginClimberFinished() 
+	{		
+    	Climber climber = new Climber(1, "Mark", "Weber");
+    	PolePositionedClimber polePosClimber = new PolePositionedClimber(climber, 1, 5);	
+    	boolean topped = false;
+    	boolean bonussed = false;
+    	boolean finished = false;
+    	int attempts = 0;
+    	
+		try {
+			polePosClimber.finished(1);
+			polePosClimber.finished(1);
+
+			topped = polePosClimber.topReached(1);
+			bonussed = polePosClimber.bonusReached(1);
+			finished = polePosClimber.isFinished(1);
+			attempts = polePosClimber.attempts(1);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();	
+			fail("Test failed");
+			
+		}  
+        assertEquals(false, topped);
+        assertEquals(false, bonussed);
+        assertEquals(true, finished);
+        assertEquals(0, attempts);   
+        
+        try {
+			polePosClimber.undo(1);
+			topped = polePosClimber.topReached(1);
+			bonussed = polePosClimber.bonusReached(1);
+			finished = polePosClimber.isFinished(1);
+			attempts = polePosClimber.attempts(1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail("Test failed");
+		}
+        
+        assertEquals(false, topped);
+        assertEquals(false, bonussed);
+        assertEquals(false, finished);
+        assertEquals(0, attempts); 
+ 
+	}	
 }

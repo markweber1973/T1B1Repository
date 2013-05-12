@@ -1,10 +1,15 @@
 package com.pofsoft.t1b1client;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 @SuppressWarnings("rawtypes")
 public class Round implements Comparable {
-	
-	private PolePositionedClimberList climbersInRound = null; 
-	
+		
+	private ArrayList<PolePositionedClimber> polePositionedClimbers;
+	private Iterator<PolePositionedClimber> polePositionedClimbersIterator;
 	private int roundId;
 	private int sequence;
 	private String name;
@@ -16,7 +21,8 @@ public class Round implements Comparable {
 	
 	public Round (int sequence, String name, int roundId, int nrofboulders, String boulderprefix)
 	{
-		climbersInRound = new PolePositionedClimberList();
+		polePositionedClimbers = new ArrayList<PolePositionedClimber>();
+		polePositionedClimbersIterator = polePositionedClimbers.iterator();
 		this.sequence = sequence;
 		this.name = name;		
 		this.roundId = roundId;
@@ -24,22 +30,21 @@ public class Round implements Comparable {
 		this.boulderprefix = boulderprefix;
 		activeBoulderId = 0;
 		enabled = false;
-	}
-	
-	
-	public void setEnabled(boolean enabled)
+	}		
+				
+	public void setEnabled()
 	{
-		this.enabled = enabled;
+		enabled = true;
 	}
+
+	public void setDisabled()
+	{
+		enabled = false;
+	}	
 	
-	public boolean getEnabled()
+	public boolean isEnabled()
 	{
 		return enabled;
-	}
-	
-	public void setBoulderId(int boulderId)
-	{
-		this.activeBoulderId = boulderId;
 	}
 	
 	public int getBoulderId()
@@ -47,12 +52,12 @@ public class Round implements Comparable {
 		return activeBoulderId;
 	}
 	
-	public String name()
+	public String getName()
 	{
 		return name;
 	}
 
-	public String boulderPrefix()
+	public String getBoulderPrefix()
 	{
 		return boulderprefix;
 	}	
@@ -74,62 +79,45 @@ public class Round implements Comparable {
 	
 	public int getSize()
 	{
-		return climbersInRound.getSize();
+		return polePositionedClimbers.size();
 	}
-	
-	public PolePositionedClimber getPolePositionedClimber(int index)
-	{
-		return climbersInRound.getPolePositionedClimber(index);
-	}
-	
+		
 	public void addPolePositionedClimber(PolePositionedClimber climber)
 	{
-		climbersInRound.add(climber);
+		polePositionedClimbers.add(climber);
+		sort();
 	}
-	
-	public PolePositionedClimber getFirst()
+			
+	public PolePositionedClimber getNextClimber() throws RuntimeException
 	{
-		return (climbersInRound.getFirst());
+		try
+		{
+			return (polePositionedClimbersIterator.next());
+		}
+		catch (NoSuchElementException e)
+		{
+			throw new RuntimeException("No next climber in round " + this.name);
+		}			
 	}
 	
-	public PolePositionedClimber getPrevious()
+	public boolean hasNextClimber()
 	{
-		return (climbersInRound.getPrevious());
+		return (polePositionedClimbersIterator.hasNext());
 	}
-	
-	public PolePositionedClimber getNext()
-	{
-		return (climbersInRound.getNext());
-	}
-	
-	public boolean hasNext()
-	{
-		return (climbersInRound.hasNext());
-	}
-	
-	public boolean isEmpty()
-	{
-		return (climbersInRound.isEmpty());
-	}
-	
-	public boolean hasPrevious()
-	{
-		return (climbersInRound.hasPrevious());
-	}
-	
+			
 	public void sort()
 	{
-		climbersInRound.sort();
+		Collections.sort(polePositionedClimbers, new PolePositionedClimberComparator());
 	}
 	
 	public void clear()
 	{
-		climbersInRound = new PolePositionedClimberList();
+		polePositionedClimbers = new ArrayList<PolePositionedClimber>();
 	}
 	
 	public void reset()
 	{
-		climbersInRound.reset();
+		polePositionedClimbersIterator = polePositionedClimbers.iterator();
 	}	
 	
 	@Override

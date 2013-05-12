@@ -1,18 +1,12 @@
 package com.pofsoft.t1b1client;
 import android.content.Context;
-import android.content.Intent;
 import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.RadioGroup.OnCheckedChangeListener;
- 
 import java.util.ArrayList;
  
 public class MyCustomAdapter extends BaseExpandableListAdapter {
