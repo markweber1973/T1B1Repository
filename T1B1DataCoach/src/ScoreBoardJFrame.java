@@ -35,7 +35,9 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 	List<JLabel> currentDynamicLabels;
 	List<JLabel> nextDynamicLabels;
 	EventInfo eventInfo;
-	String roundInfo = "";
+	String roundInfoActiveRound = "";
+	String roundInfoToggleRound = "";
+
 	int activePhaseId = 0;
 	int activeEventId = 0;
 	
@@ -94,7 +96,7 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 		}
 		
 		try {
-			roundInfo = dao.fillRoundInfo();
+			//roundInfo = dao.fillRoundInfo();
 			activeEventId = dao.getActiveEventId();
 			activePhaseId = dao.getActivePhaseId();
 		} catch (Exception e) {
@@ -185,37 +187,57 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 		rowCalculator.setInternationMode(eventInfo.getInternational());
 		
 		try {
-			dao.fillClimberList(allClimbers, showRound);
+	//		dao.fillClimberList(allClimbers, showRound);
+			
+			dao.fillClimberList(allClimbers, activeRound);			
+			dao.fillClimberList(allClimbers, toggleRound);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		try {
-			dao.fillBoulderScoreList(allBoulderScores, showRound, activePhaseId, activeEventId);
+//			dao.fillBoulderScoreList(allBoulderScores, showRound, activePhaseId, activeEventId);
+			dao.fillBoulderScoreList(allBoulderScores, activeRound, activePhaseId, activeEventId);
+			dao.fillBoulderScoreList(allBoulderScores, toggleRound, activePhaseId, activeEventId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	
 		try {
-			roundInfo = dao.fillRoundInfo(showRound);
+//			roundInfo = dao.fillRoundInfo(showRound);
+			roundInfoActiveRound = dao.fillRoundInfo(activeRound);
+			roundInfoToggleRound = dao.fillRoundInfo(toggleRound);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		int lineZero = 0;
+		int lineZero = 1;
 		JLabel labelEvent = new JLabel();  
 	    Color textColor = new Color(255,255,255);
-	    labelEvent.setText(eventInfo.getName() + ", " + roundInfo);
+	    labelEvent.setText(roundInfoActiveRound);
 	    labelEvent.setForeground(textColor);
 
 	    Font curFont = labelEvent.getFont();
 	    labelEvent.setFont(new Font(curFont.getFontName(), curFont.getStyle(), rowCalculator.getBigFontSize())); 
-	    labelEvent.setBounds(rowCalculator.getPosition(lineZero), rowCalculator.getPosition(lineZero), this.getWidth(), rowCalculator.getRowHeigth());   	
+	    labelEvent.setBounds(0, rowCalculator.getPosition(lineZero), this.getWidth(), rowCalculator.getRowHeigth());   	
 	    addDynamicLabel(labelEvent);			
 		
+	    
+	
+		JLabel labelEventA = new JLabel();  
+	    labelEventA.setText(roundInfoToggleRound);
+	    labelEventA.setForeground(textColor);
+
+	    labelEventA.setFont(new Font(curFont.getFontName(), curFont.getStyle(), rowCalculator.getBigFontSize())); 
+	    labelEventA.setBounds(0, rowCalculator.getPosition(8), this.getWidth(), rowCalculator.getRowHeigth());   	
+	    addDynamicLabel(labelEventA);		    
+	    
+	    
+	    
 		for (Iterator<Climber> iClimber = allClimbers.iterator(); iClimber.hasNext();) 
 		{
 			Climber iteratedClimber = (Climber)iClimber.next();
-			ScoreCard newScoreCard = new ScoreCard(iteratedClimber);
+			ScoreCard newScoreCard = new ScoreCard(iteratedClimber, iteratedClimber.getRound());
 			for (Iterator<BoulderScore> iBoulderScore = allBoulderScores.iterator(); iBoulderScore.hasNext();) 
 			{
 				BoulderScore iteratedBoulderScore = (BoulderScore)iBoulderScore.next();
@@ -233,12 +255,14 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 		int index = 1;
 		int lineNumber = 2;
 
-	    
-		for (Iterator<ScoreCard> i = allScoresCards.iterator(); i.hasNext();) 
+		int counter = 0;
+		for (counter = 0; counter <= 5;counter++)
 		{
-			ScoreCard currentScoreCard = (ScoreCard) i.next();	
-			RankedScoreCard newRankedCard;
+			//Iterator<ScoreCard> i = allScoresCards.iterator();
 			
+			ScoreCard currentScoreCard = allScoresCards.get(counter);
+			RankedScoreCard newRankedCard;
+		
 			if (allRankedScoreCards.isEmpty())
 			{
 				newRankedCard = new RankedScoreCard(currentScoreCard, index);
@@ -256,9 +280,61 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 			}
 			previousScoreCard = currentScoreCard;
 			newRankedCard.displayOnFrame(this, lineNumber);
-			lineNumber++;
+			lineNumber++;		
+		}
+	    index = 0;
+	    lineNumber++;
+		for (counter = 6; counter <= 11;counter++)
+		{
+			//Iterator<ScoreCard> i = allScoresCards.iterator();
 			
+			ScoreCard currentScoreCard = allScoresCards.get(counter);
+			RankedScoreCard newRankedCard;
+		
+			if (allRankedScoreCards.isEmpty())
+			{
+				newRankedCard = new RankedScoreCard(currentScoreCard, index);
+				allRankedScoreCards.add(newRankedCard);
+			}
+			else
+			{
+				if (currentScoreCard.getOverallScore().compare(previousScoreCard.getOverallScore()) != 0)
+				{
+					index++;	
+				}
+				newRankedCard = new RankedScoreCard(currentScoreCard, index);
+				allRankedScoreCards.add(newRankedCard);
+				
+			}
+			previousScoreCard = currentScoreCard;
+			newRankedCard.displayOnFrame(this, lineNumber);
+			lineNumber++;		
 		}		
+	/*	
+		for (Iterator<ScoreCard> i = allScoresCards.iterator(); i.hasNext();) 
+		{
+			ScoreCard currentScoreCard = (ScoreCard) i.next();	
+			RankedScoreCard newRankedCard;
+		
+			if (allRankedScoreCards.isEmpty())
+			{
+				newRankedCard = new RankedScoreCard(currentScoreCard, index);
+				allRankedScoreCards.add(newRankedCard);
+			}
+			else
+			{
+				if (currentScoreCard.getOverallScore().compare(previousScoreCard.getOverallScore()) != 0)
+				{
+					index++;	
+				}
+				newRankedCard = new RankedScoreCard(currentScoreCard, index);
+				allRankedScoreCards.add(newRankedCard);
+				
+			}
+			previousScoreCard = currentScoreCard;
+			newRankedCard.displayOnFrame(this, lineNumber);
+			lineNumber++;				
+		}		*/
 		updateContents();
 		repaint();	
 		updateTimer.start();
@@ -318,7 +394,7 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 	    ImageIcon largeBonusIcon = new ImageIcon("resources/" + rowCalculator.getRowHeigth() + "/star.png");
 		largeBonus = new JLabel();  
 		largeBonus.setIcon(largeBonusIcon);
-		largeBonus.setBounds(rowCalculator.getBonusIconXPos(), rowCalculator.getPosition(lineOne), rowCalculator.getRowHeigth(), rowCalculator.getRowHeigth());
+		largeBonus.setBounds(rowCalculator.getBonusIconXPos(), rowCalculator.getPosition(lineZero), rowCalculator.getRowHeigth(), rowCalculator.getRowHeigth());
 		addStaticLabel(largeBonus);	
 	
 		JLabel labelHashBonusAttempts = new JLabel();  
@@ -327,7 +403,7 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 	    labelHashBonusAttempts.setText(hashString);
 	    labelHashBonusAttempts.setForeground(hashColor);	
 	    labelHashBonusAttempts.setBounds(rowCalculator.getBonusIconXPos()+(int)(0.3*rowCalculator.getRowHeigth()), 
-	    		rowCalculator.getPosition(lineOne)+(int)(0.2*rowCalculator.getRowHeigth()), rowCalculator.getRowHeigth(), rowCalculator.getRowHeigth());
+	    		rowCalculator.getPosition(lineZero)+(int)(0.2*rowCalculator.getRowHeigth()), rowCalculator.getRowHeigth(), rowCalculator.getRowHeigth());
 
 	    Font curFont1 = labelHashBonusAttempts.getFont();
 	    labelHashBonusAttempts.setFont(new Font(curFont1.getFontName(), curFont1.BOLD, rowCalculator.getFontSize()));    
@@ -338,7 +414,7 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 		ImageIcon tickIcon = new ImageIcon("resources/" + rowCalculator.getRowHeigth() + "/Tick2.png");  
 		largeTick = new JLabel();  
 		largeTick.setIcon(tickIcon);
-		largeTick.setBounds(rowCalculator.getTopIconXPos(), rowCalculator.getPosition(lineOne), rowCalculator.getRowHeigth(), rowCalculator.getRowHeigth());
+		largeTick.setBounds(rowCalculator.getTopIconXPos(), rowCalculator.getPosition(lineZero), rowCalculator.getRowHeigth(), rowCalculator.getRowHeigth());
 		addStaticLabel(largeTick);
 	
 		JLabel labelHashTopAttempts = new JLabel();  
@@ -347,14 +423,14 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 		labelHashTopAttempts.setText(hashString);
 		labelHashTopAttempts.setForeground(hashColor);	
 		labelHashTopAttempts.setBounds(rowCalculator.getTopIconXPos()+(int)(0.5*rowCalculator.getRowHeigth()), 
-	    		rowCalculator.getPosition(lineOne)+(int)(0.2*rowCalculator.getRowHeigth()), rowCalculator.getRowHeigth(), rowCalculator.getRowHeigth());
+	    		rowCalculator.getPosition(lineZero)+(int)(0.2*rowCalculator.getRowHeigth()), rowCalculator.getRowHeigth(), rowCalculator.getRowHeigth());
 
 	    
 	    labelHashTopAttempts.setFont(new Font(curFont1.getFontName(), curFont1.BOLD, rowCalculator.getFontSize()));    
 	    
 	    addStaticLabel(labelHashTopAttempts);		
 		
-		for (int boulderNr=1; boulderNr<=4;boulderNr++)
+		for (int boulderNr=1; boulderNr<=3;boulderNr++)
 		{
     		JLabel labelBoulderNumber = new JLabel();  
     		String testString = new String("" + boulderNr);
@@ -364,7 +440,7 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 	  
     	    Font curFont = labelBoulderNumber.getFont();
     	    labelBoulderNumber.setFont(new Font(curFont.getFontName(), curFont.getStyle(), rowCalculator.getBigFontSize())); 
-    	    labelBoulderNumber.setBounds(rowCalculator.getBoulderIdXPos(boulderNr), rowCalculator.getPosition(lineOne), rowCalculator.getNameFieldWidth(), rowCalculator.getRowHeigth());   	
+    	    labelBoulderNumber.setBounds(rowCalculator.getBoulderIdXPos(boulderNr), rowCalculator.getPosition(lineZero), rowCalculator.getNameFieldWidth(), rowCalculator.getRowHeigth());   	
     	    addStaticLabel(labelBoulderNumber);
 		}
 		

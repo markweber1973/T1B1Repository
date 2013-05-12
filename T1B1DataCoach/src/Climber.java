@@ -13,20 +13,27 @@ public class Climber {
 	private String initials;
 	private String nationality;
 	private int polePosition;
+	private int round;
 
-	public Climber(int theStartNumber, String theName, String theInitials, String theNationality, int polePosition)
+	public Climber(int theStartNumber, String theName, String theInitials, String theNationality, int polePosition, int round)
 	{
 		startNumber = theStartNumber;
 		name = theName;
 		initials = theInitials;
 		nationality = theNationality;
 		this.polePosition = polePosition;
+		this.round = round;
 	};
 	
 	public Climber() {}
 		
 	public String getName() {
 		return name;
+	}
+	
+	public int getRound()
+	{
+		return round;
 	}
 
 	public int getPolePosition(){

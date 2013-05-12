@@ -9,12 +9,14 @@ public class ScoreCard {
 	private Climber climber;
 	private List<BoulderScore> hitlist;
 	private OverallScore overallScore;
+	private int roundSequence;
 	
-	public ScoreCard(Climber theClimber)
+	public ScoreCard(Climber theClimber, int roundSequence)
 	{
 		overallScore = new OverallScore();
 		hitlist = Collections.synchronizedList(new ArrayList<BoulderScore>());
 		climber = theClimber;
+		this.roundSequence = roundSequence;
 	}
 	
 	public void addToScoreCard(BoulderScore theScore)
@@ -57,32 +59,41 @@ public class ScoreCard {
 	
 	public int compare(ScoreCard scoreToCompareWith) 
 	{
-		int scoreCardCompare = 0;
 		
-		OverallScore overallScore = 
-			new OverallScore(getNumberOfTops(), getNumberOfTopAttemtps(), 
-				getNumberOfBonusses(), getNumberOfBonusAttemtps());
-		
-		scoreCardCompare = overallScore.compare(scoreToCompareWith.getOverallScore());
-		
-		if (scoreCardCompare == 0)
+		if (roundSequence == scoreToCompareWith.roundSequence)
 		{
-			if (climber.getPolePosition() == scoreToCompareWith.climber.getPolePosition())
+			int scoreCardCompare = 0;
+
+			OverallScore overallScore = 
+				new OverallScore(getNumberOfTops(), getNumberOfTopAttemtps(), 
+					getNumberOfBonusses(), getNumberOfBonusAttemtps());
+			
+			scoreCardCompare = overallScore.compare(scoreToCompareWith.getOverallScore());
+			
+			if (scoreCardCompare == 0)
 			{
-				return 0;
-			}
-			else if (climber.getPolePosition() > scoreToCompareWith.climber.getPolePosition())
-			{
-				return 1;
+				if (climber.getPolePosition() == scoreToCompareWith.climber.getPolePosition())
+				{
+					return 0;
+				}
+				else if (climber.getPolePosition() > scoreToCompareWith.climber.getPolePosition())
+				{
+					return 1;
+				}
+				else
+				{
+					return -1;
+				}
 			}
 			else
 			{
-				return -1;
+				return scoreCardCompare;
 			}
 		}
 		else
 		{
-			return scoreCardCompare;
+			if (roundSequence > scoreToCompareWith.roundSequence) return -1;
+			else return 1;
 		}
 	}
 	

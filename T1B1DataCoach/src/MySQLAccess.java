@@ -47,7 +47,7 @@ public class MySQLAccess {
 				String initials = new String(resultSet.getString("firstname"));
                 int startNumber = resultSet.getInt("startnumber");
                 int polePosition = resultSet.getInt("polePosition");
-				Climber localClimber = new Climber(startNumber, name, initials, nationality, polePosition);
+				Climber localClimber = new Climber(startNumber, name, initials, nationality, polePosition, round);
 				climberList.add(localClimber);
 				localClimber.log();
 
