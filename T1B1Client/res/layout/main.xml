@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
+	<LinearLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal" >   
+    
+	    <TextView
+	        android:id="@+id/eventnameLabel"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="25sp"
+	        android:layout_weight="4"
+	        android:text="@string/noinit"/>  
+	           
+	    
+	    <TextView
+	        android:id="@+id/phasenameLabel"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="25sp"
+	        android:layout_weight="4"
+	        android:text="@string/noinit"/>	     
+	        
+	    		
+	</LinearLayout>	
+	
+    <ExpandableListView 
+        android:id="@+id/expandable_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:transcriptMode="alwaysScroll"
+        android:cacheColorHint="#00000000"
+        android:listSelector="@android:color/transparent"/>
+    
+   
+</LinearLayout>

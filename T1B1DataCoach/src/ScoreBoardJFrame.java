@@ -58,12 +58,12 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Boulder Score Board"); 
 		//scoreBoard(true);
-		//this.fullscreen();
+		this.fullscreen();
 		this.setLayout(null);
 		Color backGround = new Color(0);
 		this.setBackground(backGround);
 		//this.setLocationRelativeTo(null); 
-		this.setSize(800,600);
+		this.setSize(1280,800);
 		
 		//Toolkit tk = Toolkit.getDefaultToolkit();  
 		
@@ -282,13 +282,15 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 			newRankedCard.displayOnFrame(this, lineNumber);
 			lineNumber++;		
 		}
-	    index = 0;
+		
+	    index = 1;
 	    lineNumber++;
 		for (counter = 6; counter <= 11;counter++)
 		{
 			//Iterator<ScoreCard> i = allScoresCards.iterator();
 			
 			ScoreCard currentScoreCard = allScoresCards.get(counter);
+			if (counter == 6) previousScoreCard = currentScoreCard;
 			RankedScoreCard newRankedCard;
 		
 			if (allRankedScoreCards.isEmpty())

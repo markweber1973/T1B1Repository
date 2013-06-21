@@ -26,7 +26,9 @@ public class UIRowCalculator {
 	{
 		double nameFieldWidthPart = 0;
 		internationMode = false;
-		this.nrOfLines = nrOfLines +=2;
+		//this.nrOfLines = nrOfLines +=2;
+		this.nrOfLines = 17;
+
 		this.horizontalResolution = horizontalResolution;
 		this.verticalResolution = verticalResolution;
 	

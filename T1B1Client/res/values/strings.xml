@@ -14,6 +14,7 @@
     <string name="two">2</string>
     <string name="three">3</string>
     <string name="four">4</string>
+    <string name="all">All</string>
     <string name="title_activity_enter_match_data">EnterMatchDataActivity</string>
     <string name="title_activity_get_start_list">GetStartListActivity</string>
     <string name="non_init">not initialized</string>
@@ -35,8 +36,18 @@
     <string name="cancel">Cancel</string> 
     <string name="firstname">Firstname</string> 
     <string name="lastname">Lastname</string>   
-    <string name="empty"></string>  
-    <string name="startnumber_short">Nr</string>  
+    <string name="startnumber_short">Start nr</string>  
     <string name="back">Back</string>
     <string name="reload">Reload</string>
+    <string name="noinit">No Init</string>
+    <string name="start">Start</string>
+    <string name="eventname">Event :</string>
+    <string name="phasename">Phase :</string>
+    <string name="poleposition">Polepos :</string>
+    <string name="nrofboulders">Boulders:</string>
+    <string name="boulderprefix">Prefix:</string>
+    <string name="enroll">Enroll</string>
+    <string name="empty"></string>
+    
+    
 </resources>

@@ -3,10 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal" >
-
-    <!-- Product id (pid) - will be HIDDEN - used to pass to other activity -->
-    
-        <TextView
+   
+    <TextView
         android:id="@+id/poleposition"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,8 +20,7 @@
         android:layout_weight="4"
         android:text="88"
         android:textStyle="bold" />
-
-
+    
     <TextView
         android:id="@+id/firstName"
         android:layout_width="match_parent"
@@ -31,8 +28,7 @@
         android:textSize="25sp"
         android:layout_weight="3"
         android:text="Doe"
-        android:textStyle="bold"
-         />
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/lastName"
@@ -41,6 +37,5 @@
         android:textSize="25sp"
         android:layout_weight="3"
         android:text="John"
-        android:textStyle="bold"
-        />  
+        android:textStyle="bold"/>  
 </LinearLayout>
