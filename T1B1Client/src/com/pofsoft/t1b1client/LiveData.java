@@ -52,14 +52,27 @@ public class LiveData {
 				int nrOfBoulders = currentRound.getNrOfBoulders();
 				int index = 0;
 				
-				for (index=1;index<=nrOfBoulders;index++)
+				if (boulderInfoDefinedOnServer)
+				{
+				
+					for (index=1;index<=nrOfBoulders;index++)
+					{
+						while (currentRound.hasNextClimber())
+						{
+							PolePositionedClimber ppc = currentRound.getNextClimber();
+							scoreSlots.add(new ScoreSlot(ppc, index, eventId, phaseId, currentRound.getRoundId(), currentRound.getBoulderPrefix()));
+						}	
+						currentRound.reset();
+					}
+				}
+				else
 				{
 					while (currentRound.hasNextClimber())
 					{
 						PolePositionedClimber ppc = currentRound.getNextClimber();
-						scoreSlots.add(new ScoreSlot(ppc, index, eventId, phaseId, currentRound.getRoundId(), currentRound.getBoulderPrefix()));
+						scoreSlots.add(new ScoreSlot(ppc, boulderId, eventId, phaseId, currentRound.getRoundId(), currentRound.getBoulderPrefix()));
 					}	
-					currentRound.reset();
+					currentRound.reset();					
 				}
 			}
 		}
@@ -155,8 +168,8 @@ public class LiveData {
 		scoreSlots = new ArrayList<ScoreSlot>();
 		scoreSlotIterator = scoreSlots.listIterator();		
 
-		boulderInfoDefinedOnServer = false;
-		boulderId = 0;		
+	//	boulderInfoDefinedOnServer = false;
+	//	boulderId = 0;		
 	}
 	
 	public void reset()
