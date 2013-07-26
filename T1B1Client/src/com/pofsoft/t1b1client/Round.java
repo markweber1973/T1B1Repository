@@ -52,6 +52,11 @@ public class Round implements Comparable {
 		return activeBoulderId;
 	}
 	
+	public int getNrOfClimbers()
+	{
+		return polePositionedClimbers.size();
+	}
+	
 	public String getName()
 	{
 		return name;

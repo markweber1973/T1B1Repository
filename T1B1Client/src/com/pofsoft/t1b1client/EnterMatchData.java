@@ -190,10 +190,9 @@ public class EnterMatchData extends Activity {
 
 	private void updateUI() throws Exception
 	{	
-		firstNameLastName.setText(currentClimber.firstName() + " " + currentClimber.lastName());
 		startNumber.setText(String.valueOf(currentClimber.getStartNumber()));
 		attemptsDone.setText(String.valueOf(currentClimber.attempts(currentBoulderId)));					
-		firstNameLastName.setText(currentClimber.firstName() + " " + currentClimber.lastName());
+		firstNameLastName.setText(currentClimber.lastName() + ", " + currentClimber.firstName());
 
 		String score = "T";
 		if (currentClimber.topReached(currentBoulderId))

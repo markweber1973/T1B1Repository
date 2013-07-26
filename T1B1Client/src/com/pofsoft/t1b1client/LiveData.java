@@ -23,8 +23,6 @@ public class LiveData {
 	{
 		roundList = new ArrayList<Round>();
 		scoreSlots = new ArrayList<ScoreSlot>();
-		boulderInfoDefinedOnServer = false;
-		boulderId = 0;
 		this.eventId = eventId;
 		this.phaseId = phaseId;
 		goingForward = true;
@@ -36,7 +34,7 @@ public class LiveData {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void fillScoreSlots()
+	public void fillScoreSlots(int boulderId)
 	{
 		Iterator<Round> roundIterator;
 		roundIterator = roundList.iterator();
@@ -52,7 +50,7 @@ public class LiveData {
 				int nrOfBoulders = currentRound.getNrOfBoulders();
 				int index = 0;
 				
-				if (boulderInfoDefinedOnServer)
+				if (0 == boulderId)
 				{
 				
 					for (index=1;index<=nrOfBoulders;index++)
@@ -78,28 +76,7 @@ public class LiveData {
 		}
 		
 	}
-	
-	public void setBoulderInfoDefinedOnServer()
-	{
-		boulderInfoDefinedOnServer = true;
-	}
-
-	public void resetBoulderInfoDefinedOnServer()
-	{
-		boulderInfoDefinedOnServer = false;
-	}	
-	
-	public void setBoulderId(int boulderId)
-	{
-		this.boulderId = boulderId;
-	}
-	
-	public int getBoulderId()
-	{
-		return boulderId;
-	}
-	
-	
+			
 	public void setEventId(int eventId)
 	{
 		this.eventId = eventId;
@@ -174,8 +151,14 @@ public class LiveData {
 	
 	public void reset()
 	{
-		roundIterator = roundList.iterator();
-		scoreSlotIterator = scoreSlots.listIterator();		
+		if (roundList != null)
+		{
+			roundIterator = roundList.iterator();
+		}
+		if (roundList != null)
+		{
+			scoreSlotIterator = scoreSlots.listIterator();
+		}
 		goingForward = true;
 	}
 	

@@ -24,6 +24,7 @@ class ScoreConsumer implements Runnable
 	public void run() 
 	{
 		url_update_score = "http://BoulderServer:8888/update_score_use_get_extended.php";
+		//url_update_score = "http://BoulderServer/update_score_use_get_extended.php";
 		
 		try 
 		{

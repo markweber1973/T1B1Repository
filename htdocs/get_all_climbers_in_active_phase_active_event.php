@@ -37,6 +37,24 @@ function getActivePhaseId()
     return $activephaseid;
 }   
      
+function checkQuery($queryresult, $queryToCheck)
+{
+	global $response;
+    if (!$queryresult) 
+    {
+	    $queryresult = "Invalid query: ".$queryToCheck." sql error:".mysql_error();
+	    $response["queryresult"] = $queryresult;	
+	    echo json_encode($response);	    
+	    die;    
+    }	
+    else if (mysql_num_rows($queryresult) == 0)
+    {
+    	$response["queryresult"] = "No results for query:".$queryToCheck;	
+    	echo json_encode($response);  	
+		die;    	
+    }
+}
+
 // ============================
 ?>
 
@@ -47,53 +65,56 @@ $getallroundsquery= ("SELECT roundphaseenrollment.roundId, roundphaseenrollment.
         " FROM roundphaseenrollment JOIN rounds ON (roundphaseenrollment.roundId=rounds.roundId) ".
 		" WHERE (roundphaseenrollment.eventId='".getActiveEventId()."' AND roundphaseenrollment.phaseId='".getActivePhaseId()."') ");
 
-$result = mysql_query($getallroundsquery, $db) or die ("FOUT: " . mysql_error());
+$result = mysql_query($getallroundsquery, $db);
+checkQuery($result, $getallroundsquery);
 
+$queryresult = "OK";
+$response["queryresult"] = $queryresult;
 $response["activeeventid"] = $activeeventid;
 $response["activephaseid"] = $activephaseid;
 $response["activephasedescription"] = $activephasedescription;
 $response["activeeventdescription"] = $activeeventdescription;
 $response["phasedefinition"] = array();
 
-if (mysql_num_rows($result) > 0) 
-{	
-	while ($row = mysql_fetch_array($result)) 
-    {
-    	// Read the roundId from the query result
-    	$roundId = $row["roundId"];    	
+	
+while ($row = mysql_fetch_array($result)) 
+{
+	// Read the roundId from the query result
+	$roundId = $row["roundId"];    	
     	
-    	// Create new array for storing a round
-    	$rounddefinition = array();    	
+	// Create new array for storing a round
+	$rounddefinition = array();    	
     	
-    	// Fill the meta data of this round
-    	$rounddefinition["roundid"] = $roundId;
-    	$rounddefinition["roundname"] = $row["name"];
-    	$rounddefinition["roundsequence"] = $row["sequence"];  
-    	$rounddefinition["roundnrofboulders"] = $row["nrofboulders"];
-    	$rounddefinition["roundboulderprefix"] = $row["boulderprefix"];      	  	
+	// Fill the meta data of this round
+	$rounddefinition["roundid"] = $roundId;
+	$rounddefinition["roundname"] = $row["name"];
+	$rounddefinition["roundsequence"] = $row["sequence"];  
+	$rounddefinition["roundnrofboulders"] = $row["nrofboulders"];
+	$rounddefinition["roundboulderprefix"] = $row["boulderprefix"];      	  	
 
-    	// Define the query for retrieving all round enrollments   	
-		$getroundcontentquery= ("SELECT roundenrollment.startNumber, roundenrollment.polePosition, climbers.firstname, climbers.lastname".
-        	" FROM roundphaseenrollment JOIN roundenrollment ON (roundphaseenrollment.eventId=roundenrollment.eventId AND roundphaseenrollment.roundId=roundenrollment.roundId AND roundphaseenrollment.phaseId=roundenrollment.phaseId) ".
-        	" JOIN eventenrollment ON (eventenrollment.startNumber=roundenrollment.startNumber) ".
-        	" JOIN climbers ON (eventenrollment.climberId=climbers.climberId)".
-			" WHERE (roundenrollment.roundId='".$roundId."' AND roundenrollment.eventId='".getActiveEventId()."' AND roundenrollment.phaseId='".getActivePhaseId()."') ");
-		$innerresult = mysql_query($getroundcontentquery, $db) or die ("FOUT: " . mysql_error());
+  	// Define the query for retrieving all round enrollments   	
+	$getroundcontentquery= ("SELECT roundenrollment.startNumber, roundenrollment.polePosition, climbers.firstname, climbers.lastname".
+		" FROM roundphaseenrollment JOIN roundenrollment ON (roundphaseenrollment.eventId=roundenrollment.eventId AND roundphaseenrollment.roundId=roundenrollment.roundId AND roundphaseenrollment.phaseId=roundenrollment.phaseId) ".
+		" JOIN eventenrollment ON (eventenrollment.startNumber=roundenrollment.startNumber) ".
+		" JOIN climbers ON (eventenrollment.climberId=climbers.climberId)".
+		" WHERE (roundenrollment.roundId='".$roundId."' AND roundenrollment.eventId='".getActiveEventId()."' AND roundenrollment.phaseId='".getActivePhaseId()."') ");
 
-		// Create an array to store the round enrollments
-    	$rounddefinition["roundenrollments"] = array();
-		while ($innerrow = mysql_fetch_array($innerresult)) 
-    	{	       	  		
- 			$roundenrollment = array();   		
-        	$roundenrollment["startnumber"] = $innerrow["startNumber"];
-        	$roundenrollment["poleposition"] = $innerrow["polePosition"];
-        	$roundenrollment["firstname"] = $innerrow["firstname"];
-        	$roundenrollment["lastname"] = $innerrow["lastname"];     
-        	array_push($rounddefinition["roundenrollments"], $roundenrollment);  		
-    	}	
-    	array_push($response["phasedefinition"], $rounddefinition);   	
-    }    
-}
+	$innerresult = mysql_query($getroundcontentquery, $db);
+	checkQuery($innerresult, $getroundcontentquery);
+		
+	// Create an array to store the round enrollments
+	$rounddefinition["roundenrollments"] = array();
+	while ($innerrow = mysql_fetch_array($innerresult)) 
+	{	       	  		
+		$roundenrollment = array();   		
+		$roundenrollment["startnumber"] = $innerrow["startNumber"];
+		$roundenrollment["poleposition"] = $innerrow["polePosition"];
+		$roundenrollment["firstname"] = $innerrow["firstname"];
+		$roundenrollment["lastname"] = $innerrow["lastname"];     
+		array_push($rounddefinition["roundenrollments"], $roundenrollment);  		
+	}	
+	array_push($response["phasedefinition"], $rounddefinition);   	
+}    
 
 echo json_encode($response);
 

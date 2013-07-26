@@ -15,29 +15,9 @@ public class MatchData extends Application {
 		liveData = new LiveData();
 	}
 	
-	public void fillScoreSlots()
+	public void fillScoreSlots(int boulderId)
 	{
-        liveData.fillScoreSlots();
-	}
-	
-	public void setBoulderInfoDefinedOnServer()
-	{
-		liveData.setBoulderInfoDefinedOnServer();
-	}
-
-	public void resetBoulderInfoDefinedOnServer()
-	{
-		liveData.resetBoulderInfoDefinedOnServer();
-	}	
-	
-	public void setBoulderId(int boulderId)
-	{
-		liveData.setBoulderId(boulderId);
-	}
-	
-	public int getBoulderId()
-	{
-		return liveData.getBoulderId();
+        liveData.fillScoreSlots(boulderId);
 	}
 		
 	public void setEventId(int eventId)

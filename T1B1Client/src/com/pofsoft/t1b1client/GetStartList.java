@@ -25,8 +25,10 @@ import android.view.View;
 
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.RadioGroup;
 
 import android.widget.TextView;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class GetStartList extends Activity
 {
@@ -40,6 +42,7 @@ public class GetStartList extends Activity
 	private Button reloadButton;
 	private TextView phaseName;
 	private TextView eventName;
+	private RadioGroup numberOfBouldersGroup;
 
 	// Progress Dialog
 	private ProgressDialog pDialog;
@@ -51,6 +54,8 @@ public class GetStartList extends Activity
 	
 	private static final String url_get_startlist = "http://BoulderServer:8888/get_all_climbers_in_active_phase_active_event.php";
 			
+	private static final String TAG_QUERY_RESULT = "queryresult";
+
 	private static final String TAG_STARTNUMBER = "startnumber";
 	private static final String TAG_POLEPOSITION = "poleposition";
 	private static final String TAG_FIRSTNAME = "firstname";
@@ -70,9 +75,10 @@ public class GetStartList extends Activity
 	private static final String TAG_PHASEID = "activephaseid";
 	private static final String TAG_EVENTDESCRIPTION = "activeeventdescription";
 	private static final String TAG_PHASEDESCRIPTION = "activephasedescription";
-	
+	private int activeBoulder;
 	private MatchData globalMatchData;
-
+	private boolean loadStartListFailed;
+	private String errorDescription;
 	private void startButtonClicked()
 	{
 		MyCustomAdapter myAdapter;
@@ -99,9 +105,13 @@ public class GetStartList extends Activity
 		{
 			showNoRoundSelectedMessage();
 		}
+		else if (activeBoulder == 100)
+		{
+			showNoBoulderSelectedMessage();
+		}
 		else
 		{
-			globalMatchData.fillScoreSlots();
+			globalMatchData.fillScoreSlots(activeBoulder);
 	   		Intent intent = new Intent(this, EnterMatchData.class); 
 			startActivity(intent);
 		}
@@ -110,14 +120,47 @@ public class GetStartList extends Activity
 	private void reloadButtonClicked()
 	{
 		new LoadStartList().execute();		
-		globalMatchData = ((MatchData)getApplicationContext());			
+		globalMatchData = ((MatchData)getApplicationContext());		
+		activeBoulder = 100;
+		numberOfBouldersGroup.clearCheck();
+
 	}	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.start_list);
-					
+		activeBoulder = 100;
+		loadStartListFailed = false;
+        numberOfBouldersGroup = (RadioGroup) findViewById(R.id.bouldersRadioGroup);
+        numberOfBouldersGroup.setOnCheckedChangeListener(new OnCheckedChangeListener()
+        {
+
+	       	public void onCheckedChanged(RadioGroup arg0, int arg1) 
+	       	{
+				switch(arg1)
+				{
+					case R.id.oneBoulder:
+						activeBoulder = 1;
+						break;
+					case R.id.twoBoulders:
+						activeBoulder = 2;
+						break;
+					case R.id.threeBoulders:
+						activeBoulder = 3;
+						break;
+					case R.id.fourBoulders:
+						activeBoulder = 4;
+						break;	
+					case R.id.allBoulders:
+						activeBoulder = 0;
+						break;							
+					default:
+						break;
+				};
+	       	};
+        });
+		
         startButton = (Button)findViewById(R.id.start_button);
         startButton.setOnClickListener(new View.OnClickListener()
         {
@@ -161,13 +204,15 @@ public class GetStartList extends Activity
 		protected String doInBackground(String... args) {
 			URL url = null;
 			HttpURLConnection urlConnection = null;
-						
+			loadStartListFailed = false;	
 			try 
 			{
 				url = new URL(url_get_startlist);
 			} 
 			catch (MalformedURLException e1) 
 			{
+				loadStartListFailed = true;
+				errorDescription = e1.getMessage();
 				e1.printStackTrace();
 			};
 				
@@ -177,7 +222,14 @@ public class GetStartList extends Activity
 				readStream(urlConnection.getInputStream());
 			} catch (IOException e1) 
 			{
+				loadStartListFailed = true;
+				errorDescription = e1.getMessage();
 				e1.printStackTrace();
+			}
+			catch (RuntimeException e)
+			{
+				loadStartListFailed = true;
+				errorDescription = e.getMessage();				
 			}
 			
 			return null;
@@ -190,6 +242,13 @@ public class GetStartList extends Activity
 		protected void onPostExecute(String file_url) {
 			// dismiss the dialog after getting all products
 			pDialog.dismiss();
+
+			if (loadStartListFailed) 
+				{
+				showErrorMessage(errorDescription);
+				return;
+				}
+
 			// updating UI from Background Thread
 			runOnUiThread(new Runnable() {
 				public void run() {
@@ -242,8 +301,10 @@ public class GetStartList extends Activity
 		}
 		
 		
-		private void readStream(InputStream in) 
+		private void readStream(InputStream in)
 		{
+			String queryResult;
+
 			BufferedReader reader = null;
 			try 
 			{
@@ -279,6 +340,11 @@ public class GetStartList extends Activity
 			try {
 				globalMatchData.clear();
 				jObj = new JSONObject(json);
+				queryResult = jObj.getString(TAG_QUERY_RESULT);
+				if (queryResult.equals("OK") == false)
+				{
+					throw new RuntimeException(queryResult);
+				}
 				activePhaseName = jObj.getString(TAG_PHASEDESCRIPTION);		
 				activeEventName = jObj.getString(TAG_EVENTDESCRIPTION);			
 				activeEventId = jObj.getInt(TAG_EVENTID);
@@ -326,12 +392,12 @@ public class GetStartList extends Activity
 				}
 
 			    globalMatchData.reset();		
-		
+
 				
 			} catch (JSONException e) {
 				Log.e("JSON Parser", "Error parsing data " + e.toString());
 			}
-		}					
+		}	
 		
 	}
 	
@@ -352,7 +418,40 @@ public class GetStartList extends Activity
     })
     .show();   	
     }
-	
+    
+    private void showNoBoulderSelectedMessage()
+    {
+        new AlertDialog.Builder(this)
+        .setIcon(android.R.drawable.ic_dialog_info)
+        .setTitle("Can not start entering data")
+        .setMessage("Select at least one boulder")
+        .setPositiveButton("Ok", new DialogInterface.OnClickListener()
+    {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+
+        }
+
+    })
+    .show();   	
+    }	
+    
+    private void showErrorMessage(String errorMessage)
+    {
+        new AlertDialog.Builder(this)
+        .setIcon(android.R.drawable.ic_dialog_alert)
+        .setTitle("Can not retrieve data from server")
+        .setMessage(errorMessage)
+        .setPositiveButton("Ok", new DialogInterface.OnClickListener()
+    {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+
+        }
+
+    })
+    .show();   	
+    }	    
 
 }
 
