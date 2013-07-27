@@ -121,6 +121,7 @@ public class GetStartList extends Activity
 	{
 		new LoadStartList().execute();		
 		globalMatchData = ((MatchData)getApplicationContext());		
+		globalMatchData.clear();
 		activeBoulder = 100;
 		numberOfBouldersGroup.clearCheck();
 
@@ -169,7 +170,7 @@ public class GetStartList extends Activity
         		startButtonClicked();
         	}
         });       
-        
+        startButton.setEnabled(false);
         reloadButton = (Button)findViewById(R.id.reload_button);
         reloadButton.setOnClickListener(new View.OnClickListener()
         {
@@ -197,7 +198,7 @@ public class GetStartList extends Activity
 			pDialog = new ProgressDialog(GetStartList.this);
 			pDialog.setMessage("Loading startlist. Please wait...");
 			pDialog.setIndeterminate(false);
-			pDialog.setCancelable(false);
+			pDialog.setCancelable(true);
 			pDialog.show();
 		}
 
@@ -244,10 +245,13 @@ public class GetStartList extends Activity
 			pDialog.dismiss();
 
 			if (loadStartListFailed) 
-				{
+			{
+		        startButton.setEnabled(false);
+
 				showErrorMessage(errorDescription);
 				return;
-				}
+			}
+	        startButton.setEnabled(true);
 
 			// updating UI from Background Thread
 			runOnUiThread(new Runnable() {

@@ -5,6 +5,40 @@
 <?php
 
 
+function encodeErrorInfoAndDie()
+{
+	global $response;
+	$response["errorcode"] = mysql_errno();   	
+    $response["success"] = 0;
+    $response["errormessage"] = "Invalid query: ".$ifexistquery." sql error:".mysql_error();	 
+    echo json_encode($response);    	
+    die;
+}  
+
+function checkQuery($queryresult, $queryToCheck)
+{
+	global $response;
+    if (mysql_errno() != 0)
+    {
+    	encodeErrorInfoAndDie();   	
+    }
+    else if (!$queryresult) 
+    {
+    	$response["success"] = 0;
+    	$response["errorcode"] = 0;
+    	$response["errormessage"] = "No results for query:".$queryToCheck;    	
+	    $queryresult = "Invalid query: ".$queryToCheck." sql error:".mysql_error();
+	    echo json_encode($response);	    
+	    die;    
+    }		
+    else 
+    {
+    	$response["success"] = 1;
+    	$response["errormessage"] = "Score successfully updated.";    
+    	echo json_encode($response);  	   	
+    }
+}
+
     $response = array();
    
     $eventId = $_POST['eventId'];
@@ -19,33 +53,36 @@
     $bonussed = $_POST['bonussed'];
     $bonusAttempts = $_POST['bonusAttempts'];
     $attempts = $_POST['attempts'];
-     
-    $query = "UPDATE scores SET finished = '$finished', topped = '$topped', topAttempts = '$topAttempts', bonussed = '$bonussed', ".
-             "bonusAttempts = '$bonusAttempts', attempts = '$attempts' WHERE ((eventId = $eventId) AND (phaseId = $phaseId) AND (roundId = $roundId)".
-             "AND (boulderNumber = $boulderNumber) AND (startNumber = $startNumber))";  
-   
+ 
     
-    $result = mysql_query($query) or die ("error");
-    if (mysql_affected_rows() == 0)
-    {      
-        $query = "INSERT INTO scores (eventId, phaseId, roundId, boulderNumber, startNumber, finished, topped, topAttempts, bonussed, bonusAttempts, attempts) ".
-    	                      " VALUES ('$eventId', '$phaseId', '$roundId', '$boulderNumber', '$startNumber', '$finished', '$topped', '$topAttempts', ".
-    	                      "'$bonussed', '$bonusAttempts', '$attempts') ";     
-      
-    	$result = mysql_query($query);
-    }
-    // check if row inserted or not
-    if ($result) 
+    $ifexistquery = "SELECT 1 FROM scores WHERE ((eventId = $eventId) AND (phaseId = $phaseId) AND ".
+    	"(roundId = $roundId) AND (boulderNumber = $boulderNumber) AND (startNumber = $startNumber))";
+    $ifexistqueryresult = mysql_query($ifexistquery);
+    if (mysql_errno() == 0)
     {
-        // successfully updated
-        $response["success"] = 1;
-        $response["message"] = "Score successfully updated.";    
-    } 
+    	if (mysql_num_rows($ifexistqueryresult) == 0)
+	    {
+	        $query = "INSERT INTO scores (eventId, phaseId, roundId, boulderNumber, startNumber, finished, topped, topAttempts, bonussed, bonusAttempts, attempts) ".
+	    	                      " VALUES ('$eventId', '$phaseId', '$roundId', '$boulderNumber', '$startNumber', '$finished', '$topped', '$topAttempts', ".
+	    	                      "'$bonussed', '$bonusAttempts', '$attempts') "; 
+	       
+	    	$result = mysql_query($query);
+	    	checkQuery($result, $query);   	
+	    }
+	    else
+	    {
+	        $query = "UPDATE scores SET finished = '$finished', topped = '$topped', topAttempts = '$topAttempts', bonussed = '$bonussed', ".
+	             "bonusAttempts = '$bonusAttempts', attempts = '$attempts' WHERE ((eventId = $eventId) AND (phaseId = $phaseId) AND (roundId = $roundId)".
+	             "AND (boulderNumber = $boulderNumber) AND (startNumber = $startNumber))";     	
+	          
+	    	$result = mysql_query($query);
+	        checkQuery($result, $query);  	    	
+	    }        	 	
+    }   
     else 
-    {  	   	
-        // successfully updated
-        $response["success"] = 0;
-        $response["message"] = "Score not successfully updated.";
+    {    
+		encodeErrorInfoAndDie();
     }
+
     echo json_encode($response);
 ?>
