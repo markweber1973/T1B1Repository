@@ -1,5 +1,12 @@
 
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -11,74 +18,109 @@ public class MySQLAccess {
 	private Connection connect = null;
 	private Statement statement = null;
 	private ResultSet resultSet = null;
+	private ResultSet resultSet2 = null;
 
 	public MySQLAccess() throws Exception
 	{
 		Class.forName("com.mysql.jdbc.Driver");
-		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
+
 		//statement = connect.prepareStatement("select * from T1B1.climbers");
 	}
 	
-	public void fillClimberList(List<Climber> climberList, int round) throws Exception
+	
+	
+	private void readStream(InputStream in) 
 	{
-		int eventId = getEventId();
-		//int roundId = getRoundId();
-		
+		BufferedReader reader = null;
+		try 
+		{
+			StringBuilder sb = new StringBuilder();
+			
+		    reader = new BufferedReader(new InputStreamReader(in));
+		    String line = "";
+		    while ((line = reader.readLine()) != null) 
+		    {
+		    	sb.append(line + "\n");
+		        System.out.println(line);
+		    }
+
+		    sb.toString();
+		    int x = 0;
+		    
+		} catch (IOException e) 
+		{
+		    e.printStackTrace();
+
+		} finally 
+		{
+		    if (reader != null) 
+		    {
+		        try 
+		        {
+		            reader.close();
+		        } 
+		        catch (IOException e) 
+		        {
+		            e.printStackTrace();
+		        }
+		    }
+		}
+	}
+	
+	public void fillClimberList(List<Climber> climberList, int eventId, int phaseId) throws Exception
+	{
 		Class.forName("com.mysql.jdbc.Driver");
-		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
+		statement = connect.createStatement();
+
 		System.out.println("B fillClimberList");    
 
 		try {			
 			statement = connect.createStatement();
-			
-			String query = "SELECT roundenrollment.startnumber, climbers.firstname, climbers.lastname, roundenrollment.polePosition, climbers.nationality" +
-			        " FROM roundenrollment INNER JOIN eventenrollment ON (roundenrollment.startnumber=eventenrollment.startnumber) " +
-			        " INNER JOIN climbers ON (eventenrollment.climberId=climbers.climberId) " +
-			        " WHERE (roundenrollment.eventId='" + eventId + "' AND roundenrollment.roundId='" + round + "') " +
-			        " ORDER BY roundenrollment.startnumber";			
-			
-			resultSet = statement.executeQuery(query);	
-		
-			while (resultSet.next()) {
-				
-				//int startNumber = resultSet.getInt("startNumber");
+					
+			String roundsInPhaseQuery = 
+				"SELECT RPE.roundId, R.name, EER.startNumber, C.lastname, C.firstname, C.nationality, RE.poleposition FROM roundphaseenrollment RPE " +
+				"JOIN rounds R ON (RPE.eventId='"+eventId+"' AND RPE.phaseId='"+phaseId+"'AND RPE.roundId=R.roundId) JOIN roundenrollment RE ON RE.roundId=RPE.roundId " +
+				"JOIN eventenrollment EER ON EER.startNumber=RE.startNumber JOIN climbers C on EER.climberId=C.climberId";			
+			resultSet = statement.executeQuery(roundsInPhaseQuery);	
+
+			while (resultSet.next()) {				
 				String name = new String(resultSet.getString("lastname"));
 				String nationality = new String(resultSet.getString("nationality"));
 				String initials = new String(resultSet.getString("firstname"));
                 int startNumber = resultSet.getInt("startnumber");
                 int polePosition = resultSet.getInt("polePosition");
-				Climber localClimber = new Climber(startNumber, name, initials, nationality, polePosition, round);
+                int roundId = resultSet.getInt("roundId");
+                String roundName = new String(resultSet.getString("name"));
+				Climber localClimber = new Climber(startNumber, name, initials, nationality, polePosition, roundId, roundName);
 				climberList.add(localClimber);
 				localClimber.log();
-
-			}
-
-				
+			}						
 		} catch (Exception e) {
 			throw e;
 		} finally {
 			close();
 		}
 		System.out.println("E fillClimberList");    
-
 	}
 	
-
 	
-	
-	public void fillBoulderScoreList(List<BoulderScore> boulderScoreList, int round, int phase, int event) throws Exception
-	{
-        //long startTime = System.currentTimeMillis();
-        
-		
+	public void fillBoulderScoreList(List<BoulderScore> boulderScoreList, int eventId, int phaseId) throws Exception
+	{       		
 		Class.forName("com.mysql.jdbc.Driver");
-		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
 		
-		try {
-		
+		try {			
+			String scoresInPhaseQuery = 
+				"SELECT S.boulderNumber, S.startNumber, S.finished, S.topped, S.topAttempts, S.bonussed, S.bonusAttempts, S.attempts " +
+				"FROM roundphaseenrollment RPE JOIN rounds R ON (RPE.eventId='"+eventId+"' AND RPE.phaseId='"+phaseId+"'AND RPE.roundId=R.roundId) JOIN " +
+				"scores S ON (S.eventId=RPE.eventId AND S.phaseId=RPE.phaseId AND S.roundId=RPE.roundId)";
 			statement = connect.createStatement();
-			resultSet = statement.executeQuery("select * from T1B1.scores WHERE (roundId = " + round + 
-					" AND phaseId = " + phase + " AND eventId = " + event + ")");	
+			resultSet = statement.executeQuery(scoresInPhaseQuery);
 			while (resultSet.next()) {
 				
 				int startNumber = resultSet.getInt("startNumber");
@@ -93,7 +135,6 @@ public class MySQLAccess {
 				Score localScore = new Score((topped==1), topAttempts, (bonussed==1), bonusAttempts, attempts);
 				BoulderScore localBoulderScore = new BoulderScore(localScore, boulderNumber, startNumber, (finished == 1));
 				boulderScoreList.add(localBoulderScore);
-				//localScore.log();
 			}
 		
 
@@ -105,33 +146,12 @@ public class MySQLAccess {
 		}
 	}
 
-	public int getActiveRoundId() throws Exception
-	{
-		Class.forName("com.mysql.jdbc.Driver");
-		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
-		int roundId;
-		
-		try {
-
-			statement = connect.createStatement();
-			resultSet = statement.executeQuery("select * from T1B1.activeround");	
-			resultSet.next();
-			roundId = resultSet.getInt("roundId");
-			
-			resultSet.close();
-			statement.close();
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			close();
-		}
-		return roundId;			
-	}	
-	
 	public int getActivePhaseId() throws Exception
 	{
 		Class.forName("com.mysql.jdbc.Driver");
-		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
+
 		int phaseId;
 		
 		try {
@@ -154,7 +174,9 @@ public class MySQLAccess {
 	public int getActiveEventId() throws Exception
 	{
 		Class.forName("com.mysql.jdbc.Driver");
-		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
+
 		int eventId;
 		
 		try {
@@ -173,34 +195,13 @@ public class MySQLAccess {
 		}
 		return eventId;			
 	}
-	
-	public int getToggleRoundId() throws Exception
-	{
-		Class.forName("com.mysql.jdbc.Driver");
-		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
-		int boardMode;
-		
-		try {
-
-			statement = connect.createStatement();
-			resultSet = statement.executeQuery("select * from T1B1.boardmode");	
-			resultSet.next();
-			boardMode = resultSet.getInt("boardMode");
-			
-			resultSet.close();
-			statement.close();
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			close();
-		}
-		return boardMode;			
-	}	
 	
 	public int getEventId() throws Exception
 	{
 		Class.forName("com.mysql.jdbc.Driver");
-		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
+
 		int eventId;
 		
 		try {
@@ -219,46 +220,15 @@ public class MySQLAccess {
 		}
 		return eventId;			
 	}
-	
-	public void setActiveRound(int activeRound) throws Exception
-	{
-		Class.forName("com.mysql.jdbc.Driver");
-		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
 		
-		try {
-
-			int result = 0;
-
-		    statement = connect.createStatement();
-		    result = statement.executeUpdate("DELETE FROM activeround");	
-			resultSet.close();
-			statement.close();
-			
-		    statement = connect.createStatement();
-		    result = statement.executeUpdate("INSERT INTO activeround (roundId) VALUES ('" + activeRound + "');");	
-			resultSet.close();
-			statement.close();			
-			//statement = connect.createStatement();
-			//result = statement.executeUpdate("UPDATE  `T1B1`.`activeround` SET  `roundId` =  '4' WHERE  `activeround`.`roundId` =3 LIMIT 1");	
-		
-			resultSet.close();
-			statement.close();
-			
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			close();
-		}		
-		
-	}
-	
 	public EventInfo fillEventInfo() throws Exception
 	{
 		EventInfo eventInfo;
 		
 		Class.forName("com.mysql.jdbc.Driver");
-		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
+
 		try {
 
 			statement = connect.createStatement();
@@ -305,7 +275,9 @@ public class MySQLAccess {
 		String roundInfo;
 		
 		Class.forName("com.mysql.jdbc.Driver");
-		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
+
 		try {
 
 			statement = connect.createStatement();
@@ -337,7 +309,9 @@ public class MySQLAccess {
 		String roundInfo;
 		
 		Class.forName("com.mysql.jdbc.Driver");
-		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
+
 		try {
 			
 			statement = connect.createStatement();

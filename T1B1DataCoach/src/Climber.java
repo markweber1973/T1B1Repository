@@ -11,11 +11,12 @@ public class Climber {
 	private int startNumber;
 	private String name;
 	private String initials;
+	private String roundName;
 	private String nationality;
 	private int polePosition;
 	private int round;
 
-	public Climber(int theStartNumber, String theName, String theInitials, String theNationality, int polePosition, int round)
+	public Climber(int theStartNumber, String theName, String theInitials, String theNationality, int polePosition, int round, String roundName)
 	{
 		startNumber = theStartNumber;
 		name = theName;
@@ -23,6 +24,7 @@ public class Climber {
 		nationality = theNationality;
 		this.polePosition = polePosition;
 		this.round = round;
+		this.roundName = roundName;
 	};
 	
 	public Climber() {}
@@ -36,6 +38,11 @@ public class Climber {
 		return round;
 	}
 
+	public String getRoundName()
+	{
+		return roundName;
+	}	
+	
 	public int getPolePosition(){
 		return polePosition;
 	}

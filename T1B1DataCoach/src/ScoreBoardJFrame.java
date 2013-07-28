@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.print.DocFlavor.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,7 +24,31 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 	List<Climber> allClimbers;
 	List<BoulderScore> allBoulderScores;
 	List<ScoreCard> allScoresCards;
+	List<ScoreCard> womenScoreCards;
+	List<ScoreCard> menScoreCards;
+
+	
+	List<RankedScoreCard> menRankedScoreCards;
+	List<RankedScoreCard> womenRankedScoreCards;
 	List<RankedScoreCard> allRankedScoreCards;
+	
+	int totalNrOfMenToDisplay;
+	int nrOfMenDisplayed;
+	int maxNrOfMenToDisplay;
+	int manNrOfScreens;
+	int manCurrentScreen;
+	
+	int totalNrOfWomenToDisplay;
+	int nrOfWomenDisplayed;
+	int maxNrOfWomenToDisplay;
+	int womanNrOfScreens;
+	int womanCurrentScreen;
+	
+	
+	boolean menDisplayTwoSets;
+	boolean womenDisplayTwoSets;
+	
+
 	
 	UpdateScoreBoardTimer updateTimer;
 	List<JLabel> tickBitmaps;
@@ -44,8 +70,8 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 	int toggleTimer;
 	
 	public ScoreBoardJFrame()
-	{
-
+	{	    
+		
 		toggleTimer = 0;
 			try {
 				dao = new MySQLAccess();
@@ -53,26 +79,36 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		
+		maxNrOfMenToDisplay = 6;
+		maxNrOfWomenToDisplay = 6;
+		manNrOfScreens = 1;
+		womanNrOfScreens = 1;
+		manCurrentScreen = 1;
+		womanCurrentScreen = 1;
+	    totalNrOfMenToDisplay = 0;
+		nrOfMenDisplayed = 0;
+		menDisplayTwoSets = true;
+		womenDisplayTwoSets = true;
 		crossesToShow = true;
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Boulder Score Board"); 
+		//this.setUndecorated(true);
 		//scoreBoard(true);
-		this.fullscreen();
+	//	this.fullscreen();
 		this.setLayout(null);
+		this.getContentPane().setBackground(Color.black);
 		Color backGround = new Color(0);
 		this.setBackground(backGround);
 		//this.setLocationRelativeTo(null); 
-		this.setSize(1280,800);
-		
+		//this.setSize(1680,1050);
+		this.setSize(800,600);
+
 		//Toolkit tk = Toolkit.getDefaultToolkit();  
 		
 		//int xSize = ((int) tk.getScreenSize().getWidth());  
 		//int ySize = ((int) tk.getScreenSize().getHeight()); 
 		//rowCalculator = new UIRowCalculator(this.getHeight(), this.getWidth(),12);
-		updateTimer = new UpdateScoreBoardTimer();
-	    updateTimer.setBoard(this);
-	    updateTimer.start();
+
 	    this.setVisible(true);
 	    //tickBitmaps = Collections.synchronizedList(new ArrayList<JLabel>());
 	    tickBitmaps = Collections.synchronizedList(new ArrayList<JLabel>());
@@ -81,10 +117,15 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 	    currentDynamicLabels = Collections.synchronizedList(new ArrayList<JLabel>());
 	    nextDynamicLabels = Collections.synchronizedList(new ArrayList<JLabel>());
     
-		//allClimbers = (new ArrayList<Climber>());
 		allBoulderScores = (new ArrayList<BoulderScore>());
 		allScoresCards = (new ArrayList<ScoreCard>());
+		womenScoreCards =  (new ArrayList<ScoreCard>());
+		menScoreCards =  (new ArrayList<ScoreCard>());
+
 		allRankedScoreCards = (new ArrayList<RankedScoreCard>());
+		menRankedScoreCards = (new ArrayList<RankedScoreCard>());
+		womenRankedScoreCards = (new ArrayList<RankedScoreCard>());
+
 		allClimbers = (new ArrayList<Climber>());
 
 		try {
@@ -96,36 +137,27 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 		}
 		
 		try {
-			//roundInfo = dao.fillRoundInfo();
 			activeEventId = dao.getActiveEventId();
 			activePhaseId = dao.getActivePhaseId();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			
+		} catch (Exception e) {	
 			e.printStackTrace();
 		}
 
-		
-	/*	try {
-			dao.fillClimberList(allClimbers);
+		try {
+			dao.fillClimberList(allClimbers, activeEventId, activePhaseId);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			
 			e.printStackTrace();
 		}
-		try {
-			dao.fillBoulderScoreList(allBoulderScores);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			
-			e.printStackTrace();
-		}*/
 		
 		rowCalculator = new UIRowCalculator(this.getHeight(), this.getWidth(), allClimbers.size());
 		rowCalculator.setInternationMode(eventInfo.getInternational());
 	    fillStaticLabels();
 	    showStaticLabels();		
-		
+	    
+		updateTimer = new UpdateScoreBoardTimer();
+	    updateTimer.setBoard(this);
+	    updateTimer.start();
+	    
 	    repaint();
 	}
 	
@@ -139,74 +171,25 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 	public void update()
 	{		
 		long startTime = System.currentTimeMillis();
-		toggleTimer++;
-
-		int toggleRound = 0;
-		int activeRound = 0;
-		int showRound = 0;
-		try {
-			activeRound = dao.getActiveRoundId();
-			toggleRound = dao.getToggleRoundId();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
-		showRound = activeRound;
-		
-		if (toggleTimer < 3)
-		{
-			showRound = activeRound;
-		}
-		else if (toggleTimer < 6)
-		{
-			if (activeRound == toggleRound)
-			{
-				showRound = activeRound;
-			}
-			else
-			{
-				showRound = toggleRound;
-			}
-		}
-		else
-		{
-			toggleTimer = 0;
-			showRound = activeRound;
-		}
-				
+					
 		allClimbers.clear();
 		allBoulderScores.clear();
 		allScoresCards.clear();
 		allRankedScoreCards.clear();
-		
-		try {
-			eventInfo = dao.fillEventInfo();
-		} catch (Exception e) {			
-			e.printStackTrace();
-		}
-					
+		menScoreCards.clear();
+		menRankedScoreCards.clear();
+		womenScoreCards.clear();
+		womenRankedScoreCards.clear();
+							
 		rowCalculator.setInternationMode(eventInfo.getInternational());
 		
 		try {
-	//		dao.fillClimberList(allClimbers, showRound);
-			
-			dao.fillClimberList(allClimbers, activeRound);			
-			dao.fillClimberList(allClimbers, toggleRound);
+			dao.fillClimberList(allClimbers, activeEventId, activePhaseId);		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		try {
-//			dao.fillBoulderScoreList(allBoulderScores, showRound, activePhaseId, activeEventId);
-			dao.fillBoulderScoreList(allBoulderScores, activeRound, activePhaseId, activeEventId);
-			dao.fillBoulderScoreList(allBoulderScores, toggleRound, activePhaseId, activeEventId);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	
-		try {
-//			roundInfo = dao.fillRoundInfo(showRound);
-			roundInfoActiveRound = dao.fillRoundInfo(activeRound);
-			roundInfoToggleRound = dao.fillRoundInfo(toggleRound);
-
+			dao.fillBoulderScoreList(allBoulderScores, activeEventId, activePhaseId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -221,9 +204,7 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 	    labelEvent.setFont(new Font(curFont.getFontName(), curFont.getStyle(), rowCalculator.getBigFontSize())); 
 	    labelEvent.setBounds(0, rowCalculator.getPosition(lineZero), this.getWidth(), rowCalculator.getRowHeigth());   	
 	    addDynamicLabel(labelEvent);			
-		
-	    
-	
+			    	
 		JLabel labelEventA = new JLabel();  
 	    labelEventA.setText(roundInfoToggleRound);
 	    labelEventA.setForeground(textColor);
@@ -231,9 +212,7 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 	    labelEventA.setFont(new Font(curFont.getFontName(), curFont.getStyle(), rowCalculator.getBigFontSize())); 
 	    labelEventA.setBounds(0, rowCalculator.getPosition(8), this.getWidth(), rowCalculator.getRowHeigth());   	
 	    addDynamicLabel(labelEventA);		    
-	    
-	    
-	    
+	    	    	    
 		for (Iterator<Climber> iClimber = allClimbers.iterator(); iClimber.hasNext();) 
 		{
 			Climber iteratedClimber = (Climber)iClimber.next();
@@ -248,95 +227,190 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 			}
 			allScoresCards.add(newScoreCard);			
 		}
-				
-		Collections.sort(allScoresCards, new ScoreCardComparator());
 		
-		ScoreCard previousScoreCard = null;
-		int index = 1;
-		int lineNumber = 2;
-
-		int counter = 0;
-		for (counter = 0; counter <= 5;counter++)
+		for (Iterator<ScoreCard> iScoreCard = allScoresCards.iterator(); iScoreCard.hasNext();)
 		{
-			//Iterator<ScoreCard> i = allScoresCards.iterator();
-			
-			ScoreCard currentScoreCard = allScoresCards.get(counter);
-			RankedScoreCard newRankedCard;
-		
-			if (allRankedScoreCards.isEmpty())
+			ScoreCard currentScoreCard = (ScoreCard)iScoreCard.next();
+			if (currentScoreCard.getRoundName().equals("Men"))
 			{
-				newRankedCard = new RankedScoreCard(currentScoreCard, index);
-				allRankedScoreCards.add(newRankedCard);
+				menScoreCards.add(currentScoreCard);
 			}
 			else
 			{
-				if (currentScoreCard.getOverallScore().compare(previousScoreCard.getOverallScore()) != 0)
-				{
-					index++;	
-				}
-				newRankedCard = new RankedScoreCard(currentScoreCard, index);
-				allRankedScoreCards.add(newRankedCard);
-				
+				womenScoreCards.add(currentScoreCard);				
 			}
-			previousScoreCard = currentScoreCard;
-			newRankedCard.displayOnFrame(this, lineNumber);
-			lineNumber++;		
+		}
+
+		int index = 1;
+		ScoreCard previousScoreCard = null;
+
+		Collections.sort(allScoresCards, new ScoreCardComparator());
+		Collections.sort(menScoreCards, new ScoreCardComparator());
+		Collections.sort(womenScoreCards, new ScoreCardComparator());
+
+		Iterator<ScoreCard> iScoreCard = menScoreCards.iterator();
+		while (iScoreCard.hasNext())
+		{
+			ScoreCard currentMenScoreCard = iScoreCard.next();
+			RankedScoreCard newRankedCard;
+			if (menRankedScoreCards.isEmpty())
+			{
+				newRankedCard = new RankedScoreCard(currentMenScoreCard, index);
+				menRankedScoreCards.add(newRankedCard);
+			}
+			else
+			{
+				if (currentMenScoreCard.getOverallScore().compare(previousScoreCard.getOverallScore()) != 0)
+				{
+					index++;
+				}
+				newRankedCard = new RankedScoreCard(currentMenScoreCard, index);
+				menRankedScoreCards.add(newRankedCard);
+			}
+			previousScoreCard = currentMenScoreCard;
 		}
 		
-	    index = 1;
-	    lineNumber++;
-		for (counter = 6; counter <= 11;counter++)
-		{
-			//Iterator<ScoreCard> i = allScoresCards.iterator();
-			
-			ScoreCard currentScoreCard = allScoresCards.get(counter);
-			if (counter == 6) previousScoreCard = currentScoreCard;
-			RankedScoreCard newRankedCard;
+		totalNrOfMenToDisplay = menRankedScoreCards.size();
 		
-			if (allRankedScoreCards.isEmpty())
+		if (nrOfMenDisplayed == 0)
+		{
+			manCurrentScreen = 1;
+			if (totalNrOfMenToDisplay <= maxNrOfMenToDisplay)
 			{
-				newRankedCard = new RankedScoreCard(currentScoreCard, index);
-				allRankedScoreCards.add(newRankedCard);
+				for (int displayIndex = 0; displayIndex < totalNrOfMenToDisplay; displayIndex++)
+				{
+					menRankedScoreCards.get(displayIndex).displayOnFrame(this, displayIndex+2);					
+				}
+				nrOfMenDisplayed = 0;				
+			}				
+			else
+			{
+				for (int displayIndex = 0; displayIndex < maxNrOfMenToDisplay; displayIndex++)
+				{
+					menRankedScoreCards.get(displayIndex).displayOnFrame(this, displayIndex+2);					
+				}	
+				nrOfMenDisplayed = maxNrOfMenToDisplay;
+			}		
+		}
+		else
+		{
+			manCurrentScreen++;
+			int nrOfMenLeftToDisplay = totalNrOfMenToDisplay - nrOfMenDisplayed;
+			if (nrOfMenLeftToDisplay <= maxNrOfMenToDisplay)
+			{
+				for (int displayIndex = 0; displayIndex < nrOfMenLeftToDisplay; displayIndex++)
+				{
+					menRankedScoreCards.get(nrOfMenDisplayed+displayIndex).displayOnFrame(this, displayIndex+2);					
+				}
+				nrOfMenDisplayed = 0;				
 			}
 			else
 			{
-				if (currentScoreCard.getOverallScore().compare(previousScoreCard.getOverallScore()) != 0)
+				for (int displayIndex = 0; displayIndex < maxNrOfMenToDisplay; displayIndex++)
 				{
-					index++;	
-				}
-				newRankedCard = new RankedScoreCard(currentScoreCard, index);
-				allRankedScoreCards.add(newRankedCard);
-				
+					menRankedScoreCards.get(nrOfMenDisplayed+displayIndex).displayOnFrame(this, displayIndex+2);					
+				}					
+				nrOfMenDisplayed+=maxNrOfMenToDisplay;
 			}
-			previousScoreCard = currentScoreCard;
-			newRankedCard.displayOnFrame(this, lineNumber);
-			lineNumber++;		
+		}
+		
+		
+		index = 1;
+		iScoreCard = womenScoreCards.iterator();
+		while (iScoreCard.hasNext())
+		{
+			ScoreCard currentWomenScoreCard = iScoreCard.next();
+			RankedScoreCard newRankedCard;
+			if (womenRankedScoreCards.isEmpty())
+			{
+				newRankedCard = new RankedScoreCard(currentWomenScoreCard, index);
+				womenRankedScoreCards.add(newRankedCard);
+			}
+			else
+			{
+				if (currentWomenScoreCard.getOverallScore().compare(previousScoreCard.getOverallScore()) != 0)
+				{
+					index++;
+				}
+				newRankedCard = new RankedScoreCard(currentWomenScoreCard, index);
+				womenRankedScoreCards.add(newRankedCard);
+			}
+			previousScoreCard = currentWomenScoreCard;
 		}		
-	/*	
-		for (Iterator<ScoreCard> i = allScoresCards.iterator(); i.hasNext();) 
-		{
-			ScoreCard currentScoreCard = (ScoreCard) i.next();	
-			RankedScoreCard newRankedCard;
 		
-			if (allRankedScoreCards.isEmpty())
+		totalNrOfWomenToDisplay = womenRankedScoreCards.size();
+		
+		if (nrOfWomenDisplayed == 0)
+		{
+			womanCurrentScreen = 1;
+			if (totalNrOfWomenToDisplay <= maxNrOfWomenToDisplay)
 			{
-				newRankedCard = new RankedScoreCard(currentScoreCard, index);
-				allRankedScoreCards.add(newRankedCard);
+				for (int displayIndex = 0; displayIndex < totalNrOfWomenToDisplay; displayIndex++)
+				{
+					womenRankedScoreCards.get(displayIndex).displayOnFrame(this, displayIndex+9);					
+				}
+				nrOfWomenDisplayed = 0;				
+			}				
+			else
+			{
+				for (int displayIndex = 0; displayIndex < maxNrOfWomenToDisplay; displayIndex++)
+				{
+					womenRankedScoreCards.get(displayIndex).displayOnFrame(this, displayIndex+9);					
+				}	
+				nrOfWomenDisplayed = maxNrOfWomenToDisplay;
+			}		
+		}
+		else
+		{
+			womanCurrentScreen++;
+
+			int nrOfWomenLeftToDisplay = totalNrOfWomenToDisplay - nrOfWomenDisplayed;
+			if (nrOfWomenLeftToDisplay <= maxNrOfWomenToDisplay)
+			{
+				for (int displayIndex = 0; displayIndex < nrOfWomenLeftToDisplay; displayIndex++)
+				{
+					womenRankedScoreCards.get(nrOfWomenDisplayed+displayIndex).displayOnFrame(this, displayIndex+9);					
+				}
+				nrOfWomenDisplayed = 0;				
 			}
 			else
 			{
-				if (currentScoreCard.getOverallScore().compare(previousScoreCard.getOverallScore()) != 0)
+				for (int displayIndex = 0; displayIndex < maxNrOfWomenToDisplay; displayIndex++)
 				{
-					index++;	
-				}
-				newRankedCard = new RankedScoreCard(currentScoreCard, index);
-				allRankedScoreCards.add(newRankedCard);
-				
+					womenRankedScoreCards.get(nrOfWomenDisplayed+displayIndex).displayOnFrame(this, displayIndex+9);					
+				}					
+				nrOfWomenDisplayed+=maxNrOfWomenToDisplay;
 			}
-			previousScoreCard = currentScoreCard;
-			newRankedCard.displayOnFrame(this, lineNumber);
-			lineNumber++;				
-		}		*/
+		}		
+
+		manNrOfScreens = (totalNrOfMenToDisplay / maxNrOfMenToDisplay) + 1;
+		if (totalNrOfMenToDisplay > maxNrOfMenToDisplay)
+		{
+			labelEvent = new JLabel();  
+		    textColor = new Color(255,255,255);
+		    labelEvent.setText("Men ( "+ manCurrentScreen + " of " + manNrOfScreens + " )");
+		    labelEvent.setForeground(textColor);
+	
+		    curFont = labelEvent.getFont();
+		    labelEvent.setFont(new Font(curFont.getFontName(), curFont.getStyle(), rowCalculator.getBigFontSize())); 
+		    labelEvent.setBounds(0, rowCalculator.getPosition(lineZero), this.getWidth(), rowCalculator.getRowHeigth());   	
+		    addDynamicLabel(labelEvent);	
+		}
+
+		womanNrOfScreens = (totalNrOfWomenToDisplay / maxNrOfWomenToDisplay) + 1;
+
+		if (totalNrOfWomenToDisplay > maxNrOfWomenToDisplay)
+		{
+			labelEventA = new JLabel();  
+		    labelEventA.setText("Women ( "+ womanCurrentScreen + " of " + womanNrOfScreens + " )");
+		    labelEventA.setForeground(textColor);
+	
+		    labelEventA.setFont(new Font(curFont.getFontName(), curFont.getStyle(), rowCalculator.getBigFontSize())); 
+		    labelEventA.setBounds(0, rowCalculator.getPosition(8), this.getWidth(), rowCalculator.getRowHeigth());   	
+		    addDynamicLabel(labelEventA);	
+		}
+		
+		
 		updateContents();
 		repaint();	
 		updateTimer.start();
@@ -356,9 +430,7 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 
 
 	public void remove(UIBitmap bitmap) {
-		remove(bitmap);
-		// TODO Auto-generated method stub
-		
+		remove(bitmap);		
 	}
 	
 	public void addStaticLabel(JLabel staticLabel)
@@ -393,6 +465,7 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 	{		
 		int lineZero = 0;
 		int lineOne = 1;
+
 	    ImageIcon largeBonusIcon = new ImageIcon("resources/" + rowCalculator.getRowHeigth() + "/star.png");
 		largeBonus = new JLabel();  
 		largeBonus.setIcon(largeBonusIcon);
@@ -426,13 +499,12 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 		labelHashTopAttempts.setForeground(hashColor);	
 		labelHashTopAttempts.setBounds(rowCalculator.getTopIconXPos()+(int)(0.5*rowCalculator.getRowHeigth()), 
 	    		rowCalculator.getPosition(lineZero)+(int)(0.2*rowCalculator.getRowHeigth()), rowCalculator.getRowHeigth(), rowCalculator.getRowHeigth());
-
 	    
 	    labelHashTopAttempts.setFont(new Font(curFont1.getFontName(), curFont1.BOLD, rowCalculator.getFontSize()));    
 	    
 	    addStaticLabel(labelHashTopAttempts);		
 		
-		for (int boulderNr=1; boulderNr<=3;boulderNr++)
+		for (int boulderNr=1; boulderNr<=4;boulderNr++)
 		{
     		JLabel labelBoulderNumber = new JLabel();  
     		String testString = new String("" + boulderNr);
@@ -445,16 +517,8 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
     	    labelBoulderNumber.setBounds(rowCalculator.getBoulderIdXPos(boulderNr), rowCalculator.getPosition(lineZero), rowCalculator.getNameFieldWidth(), rowCalculator.getRowHeigth());   	
     	    addStaticLabel(labelBoulderNumber);
 		}
-		
-//		JLabel labelEvent = new JLabel();  
-//	    Color textColor = new Color(255,255,255);
-//	    labelEvent.setText(eventInfo.getName() + ", " + roundInfo);
-//	    labelEvent.setForeground(textColor);
 
-//	    Font curFont = labelEvent.getFont();
-//	    labelEvent.setFont(new Font(curFont.getFontName(), curFont.getStyle(), rowCalculator.getBigFontSize())); 
-//	    labelEvent.setBounds(rowCalculator.getPosition(lineZero), rowCalculator.getPosition(lineZero), this.getWidth(), rowCalculator.getRowHeigth());   	
-//	    addStaticLabel(labelEvent);
+	    				
 	}
 	
 	private void showStaticLabels()

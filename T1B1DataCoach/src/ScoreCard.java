@@ -37,6 +37,11 @@ public class ScoreCard {
 		return (overallScore.getNumberOfTops());
 	}
 	
+	String getRoundName()
+	{
+		return climber.getRoundName();
+	}
+	
 	public int getNumberOfTopAttemtps()
 	{
 		return (overallScore.getAttemptsToTops());
@@ -92,8 +97,8 @@ public class ScoreCard {
 		}
 		else
 		{
-			if (roundSequence > scoreToCompareWith.roundSequence) return -1;
-			else return 1;
+			if (roundSequence > scoreToCompareWith.roundSequence) return 1;
+			else return -1;
 		}
 	}
 	
