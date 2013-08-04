@@ -23,8 +23,8 @@ public class MySQLAccess {
 	public MySQLAccess() throws Exception
 	{
 		Class.forName("com.mysql.jdbc.Driver");
-		//connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
-		connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
 
 		//statement = connect.prepareStatement("select * from T1B1.climbers");
 	}
@@ -72,8 +72,8 @@ public class MySQLAccess {
 	public void fillClimberList(List<Climber> climberList, int eventId, int phaseId) throws Exception
 	{
 		Class.forName("com.mysql.jdbc.Driver");
-		//connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
-		connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
 		statement = connect.createStatement();
 
 		System.out.println("B fillClimberList");    
@@ -111,8 +111,8 @@ public class MySQLAccess {
 	public void fillBoulderScoreList(List<BoulderScore> boulderScoreList, int eventId, int phaseId) throws Exception
 	{       		
 		Class.forName("com.mysql.jdbc.Driver");
-		//connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
-		connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
 		
 		try {			
 			String scoresInPhaseQuery = 
@@ -149,8 +149,8 @@ public class MySQLAccess {
 	public int getActivePhaseId() throws Exception
 	{
 		Class.forName("com.mysql.jdbc.Driver");
-		//connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
-		connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
 
 		int phaseId;
 		
@@ -174,8 +174,8 @@ public class MySQLAccess {
 	public int getActiveEventId() throws Exception
 	{
 		Class.forName("com.mysql.jdbc.Driver");
-		//connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
-		connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
 
 		int eventId;
 		
@@ -199,8 +199,8 @@ public class MySQLAccess {
 	public int getEventId() throws Exception
 	{
 		Class.forName("com.mysql.jdbc.Driver");
-		//connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
-		connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
 
 		int eventId;
 		
@@ -226,8 +226,8 @@ public class MySQLAccess {
 		EventInfo eventInfo;
 		
 		Class.forName("com.mysql.jdbc.Driver");
-		//connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
-		connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
 
 		try {
 
@@ -275,8 +275,8 @@ public class MySQLAccess {
 		String roundInfo;
 		
 		Class.forName("com.mysql.jdbc.Driver");
-		//connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
-		connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
 
 		try {
 
@@ -304,13 +304,47 @@ public class MySQLAccess {
 		return roundInfo;
 	}
 	
+	public String fillPhaseInfo() throws Exception
+	{
+		String roundInfo;
+		
+		Class.forName("com.mysql.jdbc.Driver");
+		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
+
+		try {
+
+			statement = connect.createStatement();
+			resultSet = statement.executeQuery("select * from T1B1.activephase");	
+			resultSet.next();
+			int phaseId = resultSet.getInt("phaseId");
+			
+			resultSet.close();
+			statement.close();
+			
+			statement = connect.createStatement();
+			resultSet = statement.executeQuery("select * from T1B1.phases WHERE phaseId = " + phaseId);
+			resultSet.next();
+			roundInfo = resultSet.getString("name");
+			
+			resultSet.close();
+			statement.close();
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			close();
+		}
+		return roundInfo;
+	}	
+	
 	public String fillRoundInfo(int roundId) throws Exception
 	{
 		String roundInfo;
 		
 		Class.forName("com.mysql.jdbc.Driver");
-		//connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
-		connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		//connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
 
 		try {
 			

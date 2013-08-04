@@ -111,7 +111,18 @@ public class GetStartList extends Activity
 		}
 		else
 		{
-			globalMatchData.fillScoreSlots(activeBoulder);
+			if (activeBoulder == -1)
+			{
+				globalMatchData.setFlexMode();
+				globalMatchData.fillScoreSlots(1);
+
+			}
+			else
+			{
+				globalMatchData.resetFlexMode();
+				globalMatchData.fillScoreSlots(activeBoulder);
+			}
+			
 	   		Intent intent = new Intent(this, EnterMatchData.class); 
 			startActivity(intent);
 		}
@@ -155,7 +166,10 @@ public class GetStartList extends Activity
 						break;	
 					case R.id.allBoulders:
 						activeBoulder = 0;
-						break;							
+						break;		
+					case R.id.flexBoulders:
+						activeBoulder = -1;
+						break;		
 					default:
 						break;
 				};

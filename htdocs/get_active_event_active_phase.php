@@ -14,7 +14,6 @@ $activeeventresult = mysql_query($query, $db) or die ("FOUT: " . mysql_error());
 $rij = mysql_fetch_array($activeeventresult);
 $activeeventdescription = $rij['name'];
 
-
 $query= "SELECT * FROM activephase;"; 
 $activephaseresult = mysql_query($query, $db);  
 $rij = mysql_fetch_array($activephaseresult);    

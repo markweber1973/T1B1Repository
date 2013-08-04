@@ -12,7 +12,7 @@
     if (isset($_POST["confirmed"])){
             
 
-        $query="INSERT INTO roundenrollment (eventId, startNumber, roundId, polePosition) VALUES ('".getActiveEventId()."', '".$_POST["startNumber"]."', '".getActiveRoundId(). "', '".$_POST["polePosition"]."');";
+        $query="INSERT INTO roundenrollment (eventId, phaseId, startNumber, roundId, polePosition) VALUES ('".getActiveEventId()."', '".getActivePhaseId()."', '".$_POST["startNumber"]."', '".getActiveRoundId(). "', '".$_POST["polePosition"]."');";
         $result = mysql_query($query, $db) or die ("FOUT: " . mysql_error());
         echo ("Added to round");
 

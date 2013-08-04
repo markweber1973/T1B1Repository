@@ -23,16 +23,48 @@
 	            android:textSize="25sp"
 	            android:text="@string/currentboulder" />
 	      
-	        <TextView
-	            android:id="@+id/currentBoulderTextView"
-	            style="@android:style/TextAppearance.Large"
-	            android:layout_width="match_parent"
-	            android:gravity="center"
-	            android:layout_height="wrap_content"
-	            android:layout_gravity="center_horizontal"
-	            android:text="@string/non_init"
-	            android:textSize="50sp"
-	            android:textStyle="bold" />      
+			<LinearLayout 
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_gravity="bottom"
+			    android:orientation="horizontal"
+			    tools:context=".EnterMatchDataActivity" >    
+    
+				<Button
+				    android:id="@+id/minusButton"
+				    style="@style/ButtonStyle"
+				    android:background="@drawable/custom_button"
+				    android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+				    android:layout_weight="1"		    
+				    android:textStyle="bold"	
+				    android:textSize="60sp"	    
+				    android:text="@string/minus" />
+
+	       		<TextView
+	         	    android:id="@+id/currentBoulderTextView"
+	                style="@android:style/TextAppearance.Large"
+	                android:layout_width="match_parent"
+	                android:gravity="center"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="1"                
+	                android:layout_gravity="center_horizontal"
+	                android:text="@string/non_init"
+	                android:textSize="60sp"
+	                android:textStyle="bold" />   
+	            						
+				<Button
+				    android:id="@+id/plusButton"
+				    style="@style/ButtonStyle"
+				    android:background="@drawable/custom_button"
+				    android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+				    android:layout_weight="1"
+				    android:textStyle="bold"	
+				    android:textSize="60sp"	    
+				    android:text="@string/plus" />  
+			</LinearLayout> 	        
+     
         
 	        <TextView
 	            android:id="@+id/startNumberLabelTextView"
@@ -68,7 +100,7 @@
 	                           
 	        <TextView
 	            android:id="@+id/currentScoreLabelTextView"
-	            style="@android:style/TextAppearance.Medium"
+	            style="@android:style/TextAppearance.Small"
 	            android:layout_width="match_parent"
 	            android:gravity="center"
 	            android:layout_height="wrap_content"

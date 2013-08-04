@@ -4,15 +4,32 @@ import android.app.Application;
 
 public class MatchData extends Application {	
 	LiveData liveData;
+	boolean flexMode;
 
 	public MatchData(int eventId, int phaseId)
 	{
 		liveData = new LiveData(eventId, phaseId);
+		flexMode = false;
 	}
 			
 	public MatchData()
 	{
 		liveData = new LiveData();
+	}
+	
+	public void setFlexMode()
+	{
+		flexMode = true;
+	}
+	
+	public void resetFlexMode()
+	{
+		flexMode = false;
+	}
+	
+	public boolean getFlexMode()
+	{
+		return flexMode;
 	}
 	
 	public void fillScoreSlots(int boulderId)

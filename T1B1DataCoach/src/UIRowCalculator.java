@@ -11,6 +11,8 @@ public class UIRowCalculator {
 	private int boulder2IconPos;	
 	private int boulder3IconPos;
 	private int boulder4IconPos;	
+	private int boulder5IconPos;	
+
 	private int flagPosition;
 	private int nameFieldWidth;
 	private int nameFieldPos;
@@ -101,7 +103,8 @@ public class UIRowCalculator {
 		
 		topIconPos = bonusIconPos - (int)(rowHeight*1.2) ;
 		topAttemptsPos = bonusIconPos - (int)(rowHeight*1.4);		
-		boulder4IconPos = topIconPos - (int)(rowHeight*1.4);
+		boulder5IconPos = topIconPos - (int)(rowHeight*1.4);
+		boulder4IconPos = boulder5IconPos - (int)(rowHeight*1.1);
 		boulder3IconPos = boulder4IconPos - (int)(rowHeight*1.1);
 		boulder2IconPos = boulder3IconPos - (int)(rowHeight*1.1);
 		boulder1IconPos = boulder2IconPos - (int)(rowHeight*1.1);		
@@ -110,7 +113,7 @@ public class UIRowCalculator {
 		{
 			flagPosition = rowHeight;
 			nationalityFieldPos = flagPosition + (int)(1.2*rowHeight);
-			nationalityFieldWidth = rowHeight;
+			nationalityFieldWidth = (int)(1.1*rowHeight);
 			startNumberFieldPos = nationalityFieldPos + nationalityFieldWidth;
 		}
 		else
@@ -120,7 +123,7 @@ public class UIRowCalculator {
 			startNumberFieldPos = (int)(0.4*rowHeight);
 		}
 				
-		startNumberFieldWidth = (int)(0.8*rowHeight);			
+		startNumberFieldWidth = (int)(0.9*rowHeight);			
 		nameFieldPos = startNumberFieldPos + rowHeight;
 		nameFieldWidth  = boulder1IconPos - nameFieldPos;	
 	}
@@ -191,6 +194,8 @@ public class UIRowCalculator {
 		if (boulderId == 2) return boulder2IconPos;
 		if (boulderId == 3) return boulder3IconPos;
 		if (boulderId == 4) return boulder4IconPos;
+		if (boulderId == 5) return boulder5IconPos;
+
 		return 0;
 	}
 	

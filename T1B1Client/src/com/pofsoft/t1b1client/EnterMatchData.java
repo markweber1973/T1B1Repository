@@ -22,6 +22,7 @@ public class EnterMatchData extends Activity {
 	EditText txtCreatedAt;
 	private MatchData globalMatchData;
 	
+	private int flexBoulderId;
 	private int currentBoulderId;
 	private int currentEventId;
 	private int currentPhaseId;
@@ -34,7 +35,9 @@ public class EnterMatchData extends Activity {
 	private TextView currentScore;
 	private TextView currentBoulder;
 	private TextView attemptsDone;
-	
+
+	private Button minusButton;
+	private Button plusButton;	
 	private Button nextClimberButton;
 	private Button previousClimberButton;
 	private Button attemptButton;
@@ -54,7 +57,8 @@ public class EnterMatchData extends Activity {
 //		View v = findViewById(R.layout.activity_enter_match_data);
 		//v.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE); 
 		
-		currentBoulderId = 0;
+		flexBoulderId = 0;
+		currentBoulderId = 1;
 		currentPhaseId = 0;
 		currentRoundId = 0;
 		currentEventId = 0;
@@ -74,7 +78,25 @@ public class EnterMatchData extends Activity {
 		globalMatchData = ((MatchData)getApplicationContext());
 		globalMatchData.reset();
 		fillLocalIdData(globalMatchData.getNextScoreSlot());
-	
+		
+		minusButton = (Button) findViewById(R.id.minusButton); 
+		minusButton.setOnClickListener(new View.OnClickListener()
+        {
+        	public void onClick(View v) 
+        	{ 
+        		decrementBoulderNumber();
+        	}
+        });
+		
+		plusButton = (Button) findViewById(R.id.plusButton);       
+		plusButton.setOnClickListener(new View.OnClickListener()
+        {
+        	public void onClick(View v) 
+        	{ 
+        		incrementBoulderNumber();
+        	}
+        });		
+		
 		nextClimberButton = (Button) findViewById(R.id.nextClimberButton); 
 		nextClimberButton.setOnClickListener(new View.OnClickListener()
         {
@@ -190,6 +212,33 @@ public class EnterMatchData extends Activity {
 
 	private void updateUI() throws Exception
 	{	
+
+		if (globalMatchData.getFlexMode())
+		{
+			if (currentBoulderId == 1)
+			{
+				minusButton.setEnabled(false);		
+			}
+			else
+			{
+				minusButton.setEnabled(true);			
+			}
+			
+			if (currentBoulderId == 5)
+			{
+				plusButton.setEnabled(false);					
+			}
+			else
+			{
+				plusButton.setEnabled(true);			
+			}
+		}
+		else
+		{
+			plusButton.setVisibility(4);
+			minusButton.setVisibility(4);
+		}
+
 		startNumber.setText(String.valueOf(currentClimber.getStartNumber()));
 		attemptsDone.setText(String.valueOf(currentClimber.attempts(currentBoulderId)));					
 		firstNameLastName.setText(currentClimber.lastName() + ", " + currentClimber.firstName());
@@ -258,17 +307,41 @@ public class EnterMatchData extends Activity {
         .show();
     }
     
+    public void incrementBoulderNumber()
+    {
+    	if (currentBoulderId < 5) 
+    	{
+    		currentBoulderId ++;
+    		try {
+				this.updateUI();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+ 		
+    }
+ 
+    public void decrementBoulderNumber()
+    {
+    	if (currentBoulderId > 1) 
+    	{
+    		currentBoulderId --;
+    		try {
+				this.updateUI();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+
+    	
+    }    
+    
     private void confirmNextClimber()
     {
-        new AlertDialog.Builder(this)
-        .setIcon(android.R.drawable.ic_dialog_alert)
-        .setTitle("Leaving current step")
-        .setMessage("Go to next step ?")
-        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-    {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-        	
+    	if (globalMatchData.getFlexMode())
+    	{
         	if (globalMatchData.hasNextScoreSlot())
         	{
         		fillLocalIdData(globalMatchData.getNextScoreSlot());
@@ -279,25 +352,43 @@ public class EnterMatchData extends Activity {
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}  
-        }
-
-    })
-    .setNegativeButton("No", null)
-    .show();   	
+			}    		
+    	}
+    	else
+    	{
+	        new AlertDialog.Builder(this)
+	        .setIcon(android.R.drawable.ic_dialog_alert)
+	        .setTitle("Leaving current step")
+	        .setMessage("Go to next step ?")
+	        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+	        {
+	
+	        @Override
+	        public void onClick(DialogInterface dialog, int which) {
+	        	
+	        	if (globalMatchData.hasNextScoreSlot())
+	        	{
+	        		fillLocalIdData(globalMatchData.getNextScoreSlot());
+	        	}
+	       	
+			    try {
+					updateUI();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}  
+	        }
+	
+		    })
+		    .setNegativeButton("No", null)
+		    .show();   	
+    	}
     }
 
     private void confirmPreviousClimber()
     {
-        new AlertDialog.Builder(this)       
-        .setIcon(android.R.drawable.ic_dialog_alert)
-        .setTitle("Leaving current step")
-        .setMessage("Go to previous step ?")
-        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-    {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-       	
+    	if (globalMatchData.getFlexMode())
+    	{
         	if (globalMatchData.hasPreviousScoreSlot())
         	{
         		fillLocalIdData(globalMatchData.getPreviousScoreSlot());
@@ -308,18 +399,43 @@ public class EnterMatchData extends Activity {
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}  
-        }
-
-    })
-    .setNegativeButton("No", null)
-    .show();   	
+			}    		
+    	}
+    	else
+    	{
+	        new AlertDialog.Builder(this)       
+	        .setIcon(android.R.drawable.ic_dialog_alert)
+	        .setTitle("Leaving current step")
+	        .setMessage("Go to previous step ?")
+	        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+	    {
+	        @Override
+	        public void onClick(DialogInterface dialog, int which) {
+	       	
+	        	if (globalMatchData.hasPreviousScoreSlot())
+	        	{
+	        		fillLocalIdData(globalMatchData.getPreviousScoreSlot());
+	        	}
+	       	
+			    try {
+					updateUI();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}  
+	        }
+	
+	    })
+	    .setNegativeButton("No", null)
+	    .show();   	
+    	}
     }    
     
     private void fillLocalIdData(ScoreSlot scoreSlot)
     {
     	currentClimber = scoreSlot.getClimber();
     	currentBoulderId = scoreSlot.getBoulderId();
+
     	currentEventId = scoreSlot.getEventId();
     	currentRoundId = scoreSlot.getRoundId();
     	currentPhaseId = scoreSlot.getPhaseId();   	

@@ -1,8 +1,10 @@
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -92,18 +94,37 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 		crossesToShow = true;
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Boulder Score Board"); 
+		
 		//this.setUndecorated(true);
 		//scoreBoard(true);
-	//	this.fullscreen();
+		//this.fullscreen();
 		this.setLayout(null);
 		this.getContentPane().setBackground(Color.black);
 		Color backGround = new Color(0);
 		this.setBackground(backGround);
 		//this.setLocationRelativeTo(null); 
-		//this.setSize(1680,1050);
-		this.setSize(800,600);
+		this.setSize(1680,1050);
+		//this.setSize(800,600);
 
-		//Toolkit tk = Toolkit.getDefaultToolkit();  
+		Window myWindow = this;
+		GraphicsConfiguration config = myWindow.getGraphicsConfiguration();
+		GraphicsDevice myScreen = config.getDevice();
+		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		// AFAIK - there are no guarantees that screen devices are in order... 
+		// but they have been on every system I've used.
+		GraphicsDevice[] allScreens = env.getScreenDevices();
+		int myScreenIndex = -1;
+		for (int i = 0; i < allScreens.length; i++) {
+		    if (allScreens[i].equals(myScreen))
+		    {
+		        myScreenIndex = i;
+		        break;
+		    }
+		}
+		System.out.println("window is on screen" + myScreenIndex);		
+		
+		Toolkit tk = Toolkit.getDefaultToolkit();  
+		
 		
 		//int xSize = ((int) tk.getScreenSize().getWidth());  
 		//int ySize = ((int) tk.getScreenSize().getHeight()); 
@@ -465,7 +486,26 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 	{		
 		int lineZero = 0;
 		int lineOne = 1;
+		
+		try {
+    		String phaseName = "";
 
+			phaseName = dao.fillPhaseInfo();
+    		JLabel labelPhaseInfo = new JLabel();  
+    	    Color textColor = new Color(255,255,255);
+    	    labelPhaseInfo.setText(phaseName);
+    	    labelPhaseInfo.setForeground(textColor);  
+    	    
+    	    Font phaseFont = labelPhaseInfo.getFont();
+    	    labelPhaseInfo.setFont(new Font(phaseFont.getFontName(), phaseFont.getStyle(), rowCalculator.getBigFontSize())); 
+    	    labelPhaseInfo.setBounds(rowCalculator.getRankFieldPos(), rowCalculator.getPosition(lineZero), rowCalculator.getNameFieldWidth(), rowCalculator.getRowHeigth());   	
+    	    addStaticLabel(labelPhaseInfo);		
+    	    
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	    ImageIcon largeBonusIcon = new ImageIcon("resources/" + rowCalculator.getRowHeigth() + "/star.png");
 		largeBonus = new JLabel();  
 		largeBonus.setIcon(largeBonusIcon);
@@ -504,7 +544,7 @@ public class ScoreBoardJFrame extends JFrame //implements ScoreBoardEventListene
 	    
 	    addStaticLabel(labelHashTopAttempts);		
 		
-		for (int boulderNr=1; boulderNr<=4;boulderNr++)
+		for (int boulderNr=1; boulderNr<=5;boulderNr++)
 		{
     		JLabel labelBoulderNumber = new JLabel();  
     		String testString = new String("" + boulderNr);
