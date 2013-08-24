@@ -69,10 +69,65 @@ public class MySQLAccess {
 		}
 	}
 	
+	String ReplaceUnknownCharacters(String sourceString)
+	{
+		if (sourceString.contains("&#"))
+		{
+			String destination = "";
+
+			destination = sourceString.replaceAll("&#193;", "Á");	sourceString = destination;
+			destination = sourceString.replaceAll("&#225;", "á");	sourceString = destination;
+			destination = sourceString.replaceAll("&#260;", "Ą");	sourceString = destination;
+			destination = sourceString.replaceAll("&#261;", "ą");	sourceString = destination;
+			destination = sourceString.replaceAll("&#196;", "Ä");	sourceString = destination;
+			destination = sourceString.replaceAll("&#228;", "ä");	sourceString = destination;
+			destination = sourceString.replaceAll("&#201;", "É");	sourceString = destination;
+			destination = sourceString.replaceAll("&#233;", "é");	sourceString = destination;
+			destination = sourceString.replaceAll("&#280;", "Ę");	sourceString = destination;
+			destination = sourceString.replaceAll("&#281;", "ę");	sourceString = destination;
+			destination = sourceString.replaceAll("&#282;", "Ě");	sourceString = destination;
+			destination = sourceString.replaceAll("&#283;", "ě");	sourceString = destination;
+			destination = sourceString.replaceAll("&#205;", "Í");	sourceString = destination;
+			destination = sourceString.replaceAll("&#237;", "í");	sourceString = destination;
+			destination = sourceString.replaceAll("&#211;", "Ó");	sourceString = destination;
+			destination = sourceString.replaceAll("&#243;", "ó");	sourceString = destination;
+			destination = sourceString.replaceAll("&#212;", "Ô");	sourceString = destination;
+			destination = sourceString.replaceAll("&#244;", "ô");	sourceString = destination;
+			destination = sourceString.replaceAll("&#218;", "Ú");	sourceString = destination;
+			destination = sourceString.replaceAll("&#250;", "ú");	sourceString = destination;
+			destination = sourceString.replaceAll("&#366;", "Ů");	sourceString = destination;
+			destination = sourceString.replaceAll("&#367;", "ů");	sourceString = destination;
+			destination = sourceString.replaceAll("&#221;", "Ý");	sourceString = destination;
+			destination = sourceString.replaceAll("&#253;", "ý");	sourceString = destination;
+			destination = sourceString.replaceAll("&#268;", "Č");	sourceString = destination;
+			destination = sourceString.replaceAll("&#269;", "č");	sourceString = destination;
+			destination = sourceString.replaceAll("&#271;", "ď");	sourceString = destination;
+			destination = sourceString.replaceAll("&#357;", "ť");	sourceString = destination;
+			destination = sourceString.replaceAll("&#313;", "Ĺ");	sourceString = destination;
+			destination = sourceString.replaceAll("&#314;", "ĺ");	sourceString = destination;
+			destination = sourceString.replaceAll("&#327;", "Ň");	sourceString = destination;
+			destination = sourceString.replaceAll("&#328;", "ň");	sourceString = destination;
+			destination = sourceString.replaceAll("&#340;", "Ŕ");	sourceString = destination;
+			destination = sourceString.replaceAll("&#341;", "ŕ");	sourceString = destination;
+			destination = sourceString.replaceAll("&#344;", "Ř");	sourceString = destination;
+			destination = sourceString.replaceAll("&#345;", "ř");	sourceString = destination;
+			destination = sourceString.replaceAll("&#352;", "Š");	sourceString = destination;
+			destination = sourceString.replaceAll("&#353;", "š");	sourceString = destination;
+			destination = sourceString.replaceAll("&#381;", "Ž");	sourceString = destination;
+			destination = sourceString.replaceAll("&#382;", "ž");
+			return destination;
+		}
+		else
+		{
+			return sourceString;
+		}
+	}
+	
+	@SuppressWarnings("deprecation")
 	public void fillClimberList(List<Climber> climberList, int eventId, int phaseId) throws Exception
 	{
 		Class.forName("com.mysql.jdbc.Driver");
-		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?" + "user=mark&password=mark");
+		connect = DriverManager.getConnection("jdbc:mysql://localhost:8889/T1B1?useUnicode=true&characterEncoding=utf-8" + "&user=mark&password=mark");
 		//connect = DriverManager.getConnection("jdbc:mysql://BoulderServer:8889/T1B1?" + "user=mark&password=mark");
 		statement = connect.createStatement();
 
@@ -89,6 +144,9 @@ public class MySQLAccess {
 
 			while (resultSet.next()) {				
 				String name = new String(resultSet.getString("lastname"));
+
+				name = ReplaceUnknownCharacters(name);			
+				// creating a new string as my split logic is based on the string format	
 				String nationality = new String(resultSet.getString("nationality"));
 				String initials = new String(resultSet.getString("firstname"));
                 int startNumber = resultSet.getInt("startnumber");
