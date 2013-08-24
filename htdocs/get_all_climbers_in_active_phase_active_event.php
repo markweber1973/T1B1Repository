@@ -59,6 +59,9 @@ function checkQuery($queryresult, $queryToCheck)
 ?>
 
 <?php
+
+mysql_query('SET CHARACTER SET utf8');
+
 $response = array();
 
 $getallroundsquery= ("SELECT roundphaseenrollment.roundId, roundphaseenrollment.sequence, rounds.name, rounds.nrofboulders, rounds.boulderprefix".
