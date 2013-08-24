@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -115,16 +116,20 @@ public class GetStartList extends Activity
 			{
 				globalMatchData.setFlexMode();
 				globalMatchData.fillScoreSlots(1);
+				
+		   		Intent intent = new Intent(this, EnterMatchData.class); 
+				startActivity(intent);
 
 			}
 			else
 			{
 				globalMatchData.resetFlexMode();
 				globalMatchData.fillScoreSlots(activeBoulder);
+				
+		   		Intent intent = new Intent(this, EnterMatchData.class); 
+				startActivity(intent);
 			}
-			
-	   		Intent intent = new Intent(this, EnterMatchData.class); 
-			startActivity(intent);
+
 		}
 	}
 	
@@ -318,6 +323,60 @@ public class GetStartList extends Activity
 			eventName.setText(activeEventName);
 		}
 		
+		String ReplaceUnknownCharacters(String sourceString)
+		{
+			if (sourceString.contains("&#"))
+			{
+				String destination = "";
+
+				destination = sourceString.replaceAll("&#193;", "Á");	sourceString = destination;
+				destination = sourceString.replaceAll("&#225;", "á");	sourceString = destination;
+				destination = sourceString.replaceAll("&#260;", "Ą");	sourceString = destination;
+				destination = sourceString.replaceAll("&#261;", "ą");	sourceString = destination;
+				destination = sourceString.replaceAll("&#196;", "Ä");	sourceString = destination;
+				destination = sourceString.replaceAll("&#228;", "ä");	sourceString = destination;
+				destination = sourceString.replaceAll("&#201;", "É");	sourceString = destination;
+				destination = sourceString.replaceAll("&#233;", "é");	sourceString = destination;
+				destination = sourceString.replaceAll("&#280;", "Ę");	sourceString = destination;
+				destination = sourceString.replaceAll("&#281;", "ę");	sourceString = destination;
+				destination = sourceString.replaceAll("&#282;", "Ě");	sourceString = destination;
+				destination = sourceString.replaceAll("&#283;", "ě");	sourceString = destination;
+				destination = sourceString.replaceAll("&#205;", "Í");	sourceString = destination;
+				destination = sourceString.replaceAll("&#237;", "í");	sourceString = destination;
+				destination = sourceString.replaceAll("&#211;", "Ó");	sourceString = destination;
+				destination = sourceString.replaceAll("&#243;", "ó");	sourceString = destination;
+				destination = sourceString.replaceAll("&#212;", "Ô");	sourceString = destination;
+				destination = sourceString.replaceAll("&#244;", "ô");	sourceString = destination;
+				destination = sourceString.replaceAll("&#218;", "Ú");	sourceString = destination;
+				destination = sourceString.replaceAll("&#250;", "ú");	sourceString = destination;
+				destination = sourceString.replaceAll("&#366;", "Ů");	sourceString = destination;
+				destination = sourceString.replaceAll("&#367;", "ů");	sourceString = destination;
+				destination = sourceString.replaceAll("&#221;", "Ý");	sourceString = destination;
+				destination = sourceString.replaceAll("&#253;", "ý");	sourceString = destination;
+				destination = sourceString.replaceAll("&#268;", "Č");	sourceString = destination;
+				destination = sourceString.replaceAll("&#269;", "č");	sourceString = destination;
+				destination = sourceString.replaceAll("&#271;", "ď");	sourceString = destination;
+				destination = sourceString.replaceAll("&#357;", "ť");	sourceString = destination;
+				destination = sourceString.replaceAll("&#313;", "Ĺ");	sourceString = destination;
+				destination = sourceString.replaceAll("&#314;", "ĺ");	sourceString = destination;
+				destination = sourceString.replaceAll("&#327;", "Ň");	sourceString = destination;
+				destination = sourceString.replaceAll("&#328;", "ň");	sourceString = destination;
+				destination = sourceString.replaceAll("&#340;", "Ŕ");	sourceString = destination;
+				destination = sourceString.replaceAll("&#341;", "ŕ");	sourceString = destination;
+				destination = sourceString.replaceAll("&#344;", "Ř");	sourceString = destination;
+				destination = sourceString.replaceAll("&#345;", "ř");	sourceString = destination;
+				destination = sourceString.replaceAll("&#352;", "Š");	sourceString = destination;
+				destination = sourceString.replaceAll("&#353;", "š");	sourceString = destination;
+				destination = sourceString.replaceAll("&#381;", "Ž");	sourceString = destination;
+				destination = sourceString.replaceAll("&#382;", "ž");
+				return destination;
+			}
+			else
+			{
+				return sourceString;
+			}
+		}
+
 		
 		private void readStream(InputStream in)
 		{
@@ -328,7 +387,7 @@ public class GetStartList extends Activity
 			{
 				StringBuilder sb = new StringBuilder();
 				
-			    reader = new BufferedReader(new InputStreamReader(in));
+			    reader = new BufferedReader(new InputStreamReader(in, "utf-8"));
 			    String line = "";
 			    while ((line = reader.readLine()) != null) 
 			    {
@@ -397,10 +456,9 @@ public class GetStartList extends Activity
 						JSONObject enrollment =  enrollmentList.getJSONObject(enrollmentiterator);
 					    
 						int startnumber = enrollment.getInt(TAG_STARTNUMBER);
-						int poleposition = enrollment.getInt(TAG_POLEPOSITION);
-						
-						String lastName = enrollment.getString(TAG_LASTNAME);
-						String firstName = enrollment.getString(TAG_FIRSTNAME);
+						int poleposition = enrollment.getInt(TAG_POLEPOSITION);						
+						String lastName = ReplaceUnknownCharacters(enrollment.getString(TAG_LASTNAME));
+						String firstName = ReplaceUnknownCharacters(enrollment.getString(TAG_FIRSTNAME));
 						Climber localClimber = new Climber(startnumber, firstName, lastName);
 						PolePositionedClimber localPolePositionedClimer = new PolePositionedClimber(localClimber, poleposition, nrofboulders);
 						localRound.addPolePositionedClimber(localPolePositionedClimer);
