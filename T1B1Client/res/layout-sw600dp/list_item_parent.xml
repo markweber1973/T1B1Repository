@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+ 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="horizontal"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"
+android:id="@+id/list_item">
+ 
+	<TextView
+	android:id="@+id/roundname"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:textSize="35sp"
+    android:text="@string/noinit"	
+	android:layout_weight="4"
+	android:layout_marginLeft="50dp" />
+	 
+    <TextView
+    android:id="@+id/nrofboulders"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="35sp"
+    android:layout_weight="5"
+    android:text="@string/noinit"
+    android:textStyle="bold" />	
+
+    <TextView
+    android:id="@+id/boulderprefix"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="35sp"
+    android:layout_weight="5"
+    android:text="@string/noinit"
+    android:textStyle="bold" />
+	
+	<CheckBox
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"  
+	android:layout_weight="4"
+	android:text="@string/enroll"
+	android:focusable="false"
+	android:layout_gravity="right"
+	android:focusableInTouchMode="false"
+	android:id="@+id/enrollcheckbox"/>
+ 
+</LinearLayout>

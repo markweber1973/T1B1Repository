@@ -6,7 +6,73 @@
 	<!-- Main ListView 
 		 Always give id value as list(@android:id/list)
 	-->
+  
+    <TextView
+        android:id="@+id/nrOfBouldersTag"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/select_boulder_id"
+        android:textSize="20sp"
+      
+        android:typeface="monospace" />
+   
+    <RadioGroup
+        android:id="@+id/bouldersRadioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
 
+        <RadioButton
+            android:id="@+id/oneBoulder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:textSize="20sp"
+            android:text="@string/one" />
+
+        <RadioButton
+            android:id="@+id/twoBoulders"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:textSize="20sp"
+            android:text="@string/two" />
+        
+        <RadioButton
+            android:id="@+id/threeBoulders"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:textSize="20sp"
+            android:text="@string/three" />
+
+        <RadioButton
+            android:id="@+id/fourBoulders"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:textSize="20sp"
+            android:text="@string/four" />
+
+        <RadioButton
+            android:id="@+id/allBoulders"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:textSize="20sp"
+            android:text="@string/all" />
+        
+        <RadioButton
+            android:id="@+id/flexBoulders"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:textSize="20sp"
+            android:text="@string/flex" />        
+
+             </RadioGroup>
  	 <LinearLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
@@ -59,7 +125,7 @@
 	        android:id="@+id/eventNameLabel"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:textSize="30sp"
+	        android:textSize="15sp"
 	        android:layout_weight="4"
 	        android:text="@string/eventname"
 	         />    	     
@@ -68,7 +134,7 @@
 	        android:id="@+id/eventnameLabel"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:textSize="30sp"
+	        android:textSize="15sp"
 	        android:layout_weight="4"
 	        android:text="@string/noinit"
 	         />    
@@ -76,7 +142,7 @@
 	        android:id="@+id/phaseNameLabel"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:textSize="30sp"
+	        android:textSize="15sp"
 	        android:layout_weight="4"
 	        android:text="@string/phasename"
 	         />    	    
@@ -84,7 +150,7 @@
 	        android:id="@+id/phasenameLabel"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:textSize="30sp"
+	        android:textSize="15sp"
 	        android:layout_weight="4"
 	        android:text="@string/noinit"
 	         />
@@ -100,7 +166,7 @@
 	        android:id="@+id/empty"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:textSize="30sp"
+	        android:textSize="15sp"
 	        android:layout_weight="4"
 	        android:text="@string/empty"
 	         />  	
@@ -114,4 +180,4 @@
 			
 			</LinearLayout>
 
-
+	

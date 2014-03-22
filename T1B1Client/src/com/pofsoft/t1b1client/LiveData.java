@@ -34,6 +34,11 @@ public class LiveData {
 		// TODO Auto-generated constructor stub
 	}
 
+	public void addScoreSlot(ScoreSlot scoreSlot)
+	{
+		scoreSlots.add(scoreSlot);
+	}
+	
 	public void fillScoreSlots(int boulderId)
 	{
 		Iterator<Round> roundIterator;
@@ -217,5 +222,19 @@ public class LiveData {
 			goingForward = false;
 		}		
 		return scoreSlotIterator.previous();
-	}			
+	}	
+	
+	public ScoreSlot getScoreSlotForStartNumber(int startNumber)
+	{		
+		ListIterator<ScoreSlot> localScoreSlotIterator = scoreSlots.listIterator();
+		while (localScoreSlotIterator.hasNext())
+		{
+			ScoreSlot currentSlot = localScoreSlotIterator.next();
+			if (currentSlot.getClimber().getStartNumber() == startNumber)
+			{
+				return currentSlot;
+			}				
+		}
+		return null;
+	}	
 }

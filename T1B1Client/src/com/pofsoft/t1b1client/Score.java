@@ -60,4 +60,15 @@ public class Score {
 		if (attempts < 0) throw new IllegalArgumentException("attempts shall be >= 0");
 		attemptsToTop = attempts;	
 	}	
+	
+	public String toString()
+	{
+	    String scoreString = "T";
+	    if (topped) scoreString += attemptsToTop;
+	    else scoreString += "-";
+	    scoreString+= "B";
+	    if (bonussed) scoreString += attemptsToBonus;
+	    else scoreString += "-";	    
+	    return scoreString;
+	}
 }

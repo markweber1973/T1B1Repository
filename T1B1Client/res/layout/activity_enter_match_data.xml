@@ -1,0 +1,232 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:orientation="vertical"
+    tools:context=".EnterMatchDataActivity" >
+    
+    <LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="bottom"
+	    android:orientation="vertical"
+	    tools:context=".EnterMatchDataActivity" >
+
+	        <TextView
+	            android:id="@+id/currentBoulderLabelTextView"
+	            
+	            android:layout_width="match_parent"
+	            android:gravity="center"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center_horizontal"
+	            android:textSize="15sp"
+	            android:text="@string/currentboulder" />
+	      
+			<LinearLayout 
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_gravity="bottom"
+			    android:orientation="horizontal"
+			    tools:context=".EnterMatchDataActivity" >
+
+	       		<TextView
+	         	    android:id="@+id/currentBoulderTextView"
+	                style="@android:style/TextAppearance.Large"
+	                android:layout_width="match_parent"
+	                android:gravity="center"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="1"                
+	                android:layout_gravity="center_horizontal"
+	                android:text="@string/eightyeight"
+	                android:textSize="35sp"
+	                android:textStyle="bold" />  
+			</LinearLayout> 	        
+     
+        
+	        <TextView
+	            android:id="@+id/startNumberLabelTextView"
+	            style="@android:style/TextAppearance.Small"
+	            android:layout_width="match_parent"
+	            android:gravity="center"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center_horizontal"
+	            android:textSize="15sp"
+	            android:text="@string/currentclimber" />
+	 		      
+	        <TextView
+	            android:id="@+id/startNumberTextView"
+	            style="@android:style/TextAppearance.Large"
+	            android:layout_width="match_parent"
+	            android:gravity="center"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center_horizontal"
+	            android:text="@string/non_init"
+	            android:textSize="35sp"
+	            android:textStyle="bold" />
+	             	                		      
+	        <TextView
+	            android:id="@+id/firstNameLastNameTextView"
+	            style="@android:style/TextAppearance.Large"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center_horizontal"
+	            android:gravity="center"
+	            android:maxLines="1"
+	            android:text="@string/non_init"
+	            android:textSize="35sp"
+	            android:textStyle="bold" />
+	                           
+	        <TextView
+	            android:id="@+id/currentScoreLabelTextView"
+	            style="@android:style/TextAppearance.Small"
+	            android:layout_width="match_parent"
+	            android:gravity="center"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center_horizontal"
+	            android:textSize="15sp"
+	            android:text="@string/score" />
+		      
+	        <TextView
+	            android:id="@+id/currentScoreTextView"
+	            style="@android:style/TextAppearance.Large"
+	            android:layout_width="match_parent"
+	            android:gravity="center"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center_horizontal"
+	            android:text="@string/non_init"
+	            android:textSize="35sp"
+	            android:textStyle="bold" />
+	                  	     
+	        <TextView
+	            android:id="@+id/attemptsDoneLabelTextView"
+	            style="@android:style/TextAppearance.Small"
+	            android:layout_width="match_parent"
+	            android:gravity="center"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center_horizontal"
+	            android:textSize="15sp"
+	            android:text="@string/attempts_done" />	        
+	        
+	        <TextView
+	            android:id="@+id/attemptsDoneTextView"
+	            style="@android:style/TextAppearance.Large"
+	            android:layout_width="match_parent"
+	            android:gravity="center"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center_horizontal"
+	            android:textSize="35sp"
+	            android:text="@string/non_init"
+	            android:textStyle="bold" />	                	  	        	        
+    </LinearLayout>
+    
+
+    	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="bottom"
+	    android:orientation="vertical"
+	    tools:context=".EnterMatchDataActivity" >   
+	    
+ 		<Button
+ 		    android:id="@+id/attemptButton"
+ 		    style="@style/ButtonStyle"
+ 		    android:background="@drawable/custom_button"
+ 		    android:layout_width="fill_parent"
+ 		    android:layout_height="wrap_content"
+ 		    android:text="@string/attempt"
+ 		    android:textSize="25sp"
+ 		    android:textStyle="bold" />
+ 	 </LinearLayout> 
+ 	 
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="bottom"
+	    android:orientation="horizontal"
+	    tools:context=".EnterMatchDataActivity" >    
+    
+		<Button
+		    android:id="@+id/bonusButton"
+		    style="@style/ButtonStyle"
+		    android:background="@drawable/custom_button"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"		    
+		    android:textStyle="bold"	
+		    android:textSize="25sp"	    
+		    android:text="@string/bonus" />
+
+		<Button
+		    android:id="@+id/topButton"
+		    style="@style/ButtonStyle"
+		    android:background="@drawable/custom_button"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:textStyle="bold"	
+		    android:textSize="25sp"	    
+		    android:text="@string/top" />
+    
+    </LinearLayout> 		
+     	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="bottom"
+	    android:orientation="vertical"
+	    tools:context=".EnterMatchDataActivity" > 			
+  		<Button
+		    android:id="@+id/finishedButton"
+		    style="@style/ButtonStyle"
+		    android:background="@drawable/custom_button"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:textStyle="bold"	
+		    android:textSize="25sp"	    
+		    android:text="@string/finished" /> 	
+		    	
+ 		<Button
+		    android:id="@+id/undoButton"
+		    style="@style/ButtonStyle"
+		    android:background="@drawable/custom_button"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"		    
+		    android:textStyle="bold"	
+		    android:textSize="25sp"	    
+		    android:text="@string/undo" />
+				   	    
+	</LinearLayout> 
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="bottom"	   
+	    android:orientation="horizontal"
+	    tools:context=".EnterMatchDataActivity" > 
+	      
+		<Button
+		    android:id="@+id/previousClimberButton"
+		    style="@style/ButtonStyle"
+		    android:background="@drawable/custom_button"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"	  
+		    android:textStyle="bold"
+		    android:textSize="25sp"		  	
+		    android:text="@string/previous" />
+		
+		<Button
+		    android:id="@+id/nextClimberButton"
+		    style="@style/ButtonStyle"
+		    android:background="@drawable/custom_button"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"	    
+		    android:textStyle="bold"
+		    android:textSize="25sp"	  
+		    android:text="@string/next" />		
+	</LinearLayout>
+
+</LinearLayout>
+
+
+

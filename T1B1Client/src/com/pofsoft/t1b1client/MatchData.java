@@ -130,7 +130,17 @@ public class MatchData extends Application {
 	public ScoreSlot getPreviousScoreSlot()
 	{
 		return liveData.getPreviousScoreSlot();
-	}			
+	}	
+	
+	public ScoreSlot getScoreSlotForStartNumber(int startNumber)
+	{
+		return liveData.getScoreSlotForStartNumber(startNumber);
+	}
+	
+	public void addScoreSlot(ScoreSlot scoreSlot)
+	{
+		liveData.addScoreSlot(scoreSlot);
+	}
 	
 }
 	

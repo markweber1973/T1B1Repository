@@ -7,13 +7,19 @@
     <string name="title_activity_main">T1B1 Client</string>
     <string name="set_boulder_id">Set Boulder Number</string>
     <string name="get_startlist_id">Get Startlist</string>
-    <string name="enter_match_data_id">Enter Match Data</string>
     <string name="title_activity_select_boulder">SelectBoulder</string>
     <string name="select_boulder_id">Select Boulder Number</string>
+    <string name="eightyeight">88</string>
+    <string name="zero">0</string>   
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="three">3</string>
     <string name="four">4</string>
+    <string name="five">5</string>   
+    <string name="six">6</string>
+    <string name="seven">7</string>
+    <string name="eight">8</string>
+    <string name="nine">9</string>    
     <string name="all">All</string>
     <string name="title_activity_enter_match_data">EnterMatchDataActivity</string>
     <string name="title_activity_get_start_list">GetStartListActivity</string>
@@ -48,6 +54,23 @@
     <string name="boulderprefix">Prefix:</string>
     <string name="enroll">Enroll</string>
     <string name="empty"></string>
-    
+    <string name="flex">Flex</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>   
+    <string name="clear">Clear</string>    
+    <string name="enter">Enter</string> 
+    <string name="submit">Submit</string>  
+    <string name="unknown_startnumber">Unknown startnumber</string>       
+    <string name="yes">Yes</string>    
+    <string name="no">No</string> 
+    <string name="top_reached">Top reached ?</string> 
+    <string name="top_attempts">Top attempts:</string>     
+    <string name="bonus_reached">Bonus reached ?</string>  
+    <string name="bonus_attempts">Bonus attempts:</string>     
+    <string name="enter_startnumber">Enter start number:</string>     
+    <string name="requested_start_number">Requested start number:</string>     
+    <string name="enter_boulder_number">Enter boulder number:</string>     
+    <string name="requested_boulder_number">Requested boulder number:</string>     
+    <string name="confirm">Confirm</string>     
     
 </resources>

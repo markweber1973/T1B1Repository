@@ -13,7 +13,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -102,7 +101,7 @@ public class GetStartList extends Activity
 			}
 		}		
 		
-		if (noRoundSelected)
+		if (noRoundSelected && (activeBoulder != -1))
 		{
 			showNoRoundSelectedMessage();
 		}
@@ -117,7 +116,7 @@ public class GetStartList extends Activity
 				globalMatchData.setFlexMode();
 				globalMatchData.fillScoreSlots(1);
 				
-		   		Intent intent = new Intent(this, EnterMatchData.class); 
+		   		Intent intent = new Intent(this, EnterMatchDataFlex.class); 
 				startActivity(intent);
 
 			}

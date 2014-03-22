@@ -1,6 +1,7 @@
 package com.pofsoft.t1b1client;
 
-public class Climber {
+@SuppressWarnings("rawtypes")
+public class Climber implements Comparable {
 	
 	private int startNumber;
 	private String firstName;
@@ -42,4 +43,21 @@ public class Climber {
 	{
 		return this.lastName;
 	}	
+	
+	@Override
+	public int compareTo(Object compareTarget)
+	{
+		if (startNumber < ((Climber)compareTarget).startNumber())
+		{
+			return (-1);
+		}
+		else if (startNumber == ((Climber)compareTarget).startNumber())
+		{
+			return (0);
+		}
+		else
+		{
+			return 1;
+		}			
+	}
 }
